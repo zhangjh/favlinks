@@ -1,0 +1,92 @@
+.wrapper {
+  margin: 0 auto;
+  max-width: 1260px;  /*div居中margin:0 auto需要配合width使用*/
+  padding: 1px 10px;
+  background: #F8F8F8;
+}
+
+#header {
+  background: #2b7dad;
+}
+
+header a {
+  color: #777;
+}
+
+footer p {
+  text-align: center;
+}
+
+.navbar-toggle {
+  background: #ddd;
+  margin-top: 15px;
+  margin-right: 0;
+}
+
+.icon-bar {
+  border: 1px solid;
+}
+
+.contentwrap {
+  border: 1px solid #e8e8e8;
+  margin: 0 auto;
+  max-width: 1260px;
+  margin-top: 40px;
+}
+
+.group {
+  border: 1px solid #e8e8e8;
+  background: #fafafa;
+  height: 40px;
+  position: relative;
+}
+
+div.links {
+  display: inline-block;
+}
+
+.group > span {
+  position: absolute;
+  top: 5px;
+  left:10px;
+  color: #266da1;
+  font-size: 1.5em;
+}
+
+.links {
+  max-width: 173px;
+  height: 35px;
+  color:#666;
+  margin:6px 5px;
+  border: 1px solid #e8e8e8;
+  /*background: #fafafa;*/
+}
+
+.links > a > span {
+  display: inline-block;
+  height: 20px;
+  line-height: 20px;
+  padding:8px 12px;
+  color:#666;
+}
+
+.links > span {
+  background: #fafafa;
+  width: 35px;
+  line-height:30px;
+  float: right;
+  text-align: center;border: 1px solid #fafafa;
+}
+
+.addNewLinks {
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  border: 1px solid blue;
+  box-shadow: 10px 5px 5px #888888;
+}
+
+.addNewLinks > a > span {
+  color: black;
+  font-weight: bold;
+}
