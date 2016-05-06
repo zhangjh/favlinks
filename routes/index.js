@@ -6,19 +6,12 @@ var routes = function(mongoose){
             'Content-Type': 'text/plan'
         });
         */
-        //读取cookie (密码通过加密存储在cookie里:)
-        var cookie = req.cookies;
-        console.log(cookie.passwd);
-
-        /*
-        mongoose.find("links",{},function(ret){
-            if(ret.length){
-                res.send(ret);
-            }        
-        });
-        */
-        mongoose.find("link",{},function(ret){
-            res.send("index",{
+        var findPattern = {user:"default"};
+        if(req.session && req.session.user){
+            findPattern = {user:req.session.user};
+        }
+        mongoose.find("links",findPattern,function(ret){
+            res.render("index",{
                 title: "favlinks--您的私人收藏夹",ret: ret    
             });
         });
