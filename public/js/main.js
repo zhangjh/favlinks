@@ -42,3 +42,17 @@ $(".addNewLinks").on('click',function () {
         show: true
     });
 });
+
+$(".links").hover(function () {
+    $(this).css({
+        boxShadow: "1px 1px 10px 1px lightblue",
+        fontSize: "larger"
+    });
+    $(this).find(".glyphicon-edit").show();
+},function () {
+    $(this).css({
+        boxShadow: "none",
+        fontSize: "normal"
+    });
+    $(this).find(".glyphicon-edit").hide();
+});
