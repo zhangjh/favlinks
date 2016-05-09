@@ -26,6 +26,20 @@ $(".addGroupBtn").on('click',function () {
     });
 });
 
+$(".links").hover(function () {
+    $(this).css({
+        boxShadow: "1px 1px 10px 1px lightblue",
+        fontSize: "larger"
+    });
+    $(this).find(".glyphicon-edit").show();
+},function () {
+    $(this).css({
+        boxShadow: "none",
+        fontSize: "normal"
+    });
+    $(this).find(".glyphicon-edit").hide();
+});
+
 $(".addNewLinks").hover(function () {
     $(this).css({
         'box-shadow': "10px 5px 5px #888888"
@@ -43,16 +57,3 @@ $(".addNewLinks").on('click',function () {
     });
 });
 
-$(".links").hover(function () {
-    $(this).css({
-        boxShadow: "1px 1px 10px 1px lightblue",
-        fontSize: "larger"
-    });
-    $(this).find(".glyphicon-edit").show();
-},function () {
-    $(this).css({
-        boxShadow: "none",
-        fontSize: "normal"
-    });
-    $(this).find(".glyphicon-edit").hide();
-});
