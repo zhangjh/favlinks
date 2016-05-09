@@ -3,9 +3,9 @@
         <header>
             <nav class="navbar">
                 <div class="container">
-                    <div class="navbar-header" style="margin: 10px;">
-                        <img src="/img/logo.png" alt="brand" style="width: 80px;">
-                        <img id="logofont" src="/img/logo-font.png" alt="">
+                    <div class="navbar-header">
+                        <img id="logoPic" src="/img/logo.png" alt="brand">
+                        <img id="logoFont" src="/img/logo-font.png" alt="">
 
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#userinfo">
                             <span class="sr-only">切换导航</span>
@@ -25,10 +25,10 @@
                     <!--</form>-->
                     <!--</div>-->
 
-                    <ul class="nav navbar-nav navbar-right collapse navbar-collapse" style="padding-top: 15px;" id="userinfo">
+                    <ul class="nav navbar-nav navbar-right collapse navbar-collapse" id="userinfo">
                         <li><a href="javascript:;">您好，xxx!</a></li>
-                        <li><a href="#">登录</a></li>
-                        <li><a href="">退出</a></li>
+                        <li><a href="#" id="login">登录</a></li>
+                        <li><a href="" id="logout">退出</a></li>
                     </ul>
                 </div>
             </nav>
@@ -39,24 +39,81 @@
 <div class="content">
     <div class="container-fluid">
         <div class="contentwrap">
-            <div class="group">
-                <span>默认</span>
-            </div>
-            <div class="links">
-                <a href="//baidu.com">
-                    <span style="">百度</span>
-                </a>
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-            </div>
-            <div class="links addNewLinks">
-                <!--添加新链接按钮-->
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                <a href="javascript:;">
-                    <span style="">添加新链接</span>
-                </a>
-            </div>
+            <%
+                for(var i in groups){
+                    var group = groups[i];
+            %>
+                    <div class="groupWrap">
+                        <div class="group">
+                            <span class="groupName"><%= group %></span>
+                            <span class="glyphicon glyphicon-plus addGroupBtn" aria-hidden="true"></span>
+                        </div>
+            <%
+                        for(var j in ret){
+                            var subGroup = ret[j].group,
+                            linkName = ret[j].linkName,
+                            url = ret[j].url;
+                            if(subGroup == group){
+                        %>
+                            <div class="links">
+                                <a href="//<%= url %>" target="_blank">
+                                    <span style="" class="linkName"><%= linkName %></span>
+                                </a>
+                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                            </div>
+                        <%
+                            }
+                        }
+                        %>
+                        <div class="links addNewLinks">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            <a href="javascript:;">
+                                <span style="" class="linkName">添加新链接</span>
+                            </a>
+                        </div>
+                    </div>
+                        <%
+                }
+            %>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="addNewGroupPopup" role="dialog" aria-labelledby="modal-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addGroup-title">添加新组</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control addNewLinksName" placeholder="输入组名">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary">保存</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="addNewLinkPopup" role="dialog" aria-labelledby="addLink-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addLink-title">添加新链接</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control addNewLinksName" placeholder="输入网址名">
+                <input type="text" class="form-control addNewLinksUrl" placeholder="输入网址">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary">保存</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 

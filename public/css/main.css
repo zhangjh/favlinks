@@ -17,6 +17,14 @@ footer p {
   text-align: center;
 }
 
+.navbar-header {
+  margin: 10px;
+}
+
+#logoPic {
+  width: 80px;
+}
+
 .navbar-toggle {
   background: #ddd;
   margin-top: 15px;
@@ -27,34 +35,57 @@ footer p {
   border: 1px solid;
 }
 
+#userinfo {
+  padding-top: 15px;
+}
+
 .contentwrap {
-  border: 1px solid #e8e8e8;
+  /*border: 1px solid #e8e8e8;*/
   margin: 0 auto;
   max-width: 1260px;
   margin-top: 40px;
 }
 
+.groupWrap {
+  border: 1px solid #e8e8e8;
+  margin: 5px 5px 10px 5px;
+}
+
 .group {
   border: 1px solid #e8e8e8;
+  border-left: none;
+  border-right: none;
   background: #fafafa;
   height: 40px;
   position: relative;
+}
+
+.group span {
+  color: #266da1;
+  font-size: 1.5em;
 }
 
 div.links {
   display: inline-block;
 }
 
-.group > span {
+.groupName {
   position: absolute;
   top: 5px;
   left:10px;
-  color: #266da1;
-  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.addGroupBtn{
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-size: 100% !important;
+  cursor: pointer;
 }
 
 .links {
-  max-width: 173px;
+  width: 140px;
   height: 35px;
   color:#666;
   margin:6px 5px;
@@ -62,7 +93,7 @@ div.links {
   /*background: #fafafa;*/
 }
 
-.links > a > span {
+.linkName {
   display: inline-block;
   height: 20px;
   line-height: 20px;
@@ -76,6 +107,7 @@ div.links {
   line-height:30px;
   float: right;
   text-align: center;border: 1px solid #fafafa;
+  background: #e8e8e8;
 }
 
 .addNewLinks {
@@ -83,10 +115,15 @@ div.links {
   -moz-border-radius: 2px;
   border-radius: 2px;
   border: 1px solid blue;
-  box-shadow: 10px 5px 5px #888888;
+  /*box-shadow: 10px 5px 5px #888888;*/
 }
 
 .addNewLinks > a > span {
   color: black;
   font-weight: bold;
+}
+
+.addNewLinksName,.addNewLinksUrl {
+  width: 70%;
+  margin: 8px auto;
 }
