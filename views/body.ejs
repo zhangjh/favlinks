@@ -28,7 +28,7 @@
                     <ul class="nav navbar-nav navbar-right collapse navbar-collapse" id="userinfo">
                         <li><a href="javascript:;">您好，xxx!</a></li>
                         <li><a href="#" id="login">登录</a></li>
-                        <li><a href="" id="logout">退出</a></li>
+                        <li><a href="/logout" id="logout">退出</a></li>
                     </ul>
                 </div>
             </nav>
@@ -52,7 +52,8 @@
                         for(var j in ret){
                             var subGroup = ret[j].group,
                             linkName = ret[j].linkName,
-                            url = ret[j].url;
+                            url = ret[j].url.split(/(ftp|https?):\/\//);
+                            url = url[url.length - 1];
                             if(subGroup == group){
                         %>
                             <div class="links">
@@ -65,7 +66,7 @@
                             }
                         }
                         %>
-                        <div class="links addNewLinks">
+                        <div class="links addNewLinks" index="<%= i %>">
                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                             <a href="javascript:;">
                                 <span style="" class="linkName">添加新链接</span>
@@ -91,7 +92,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary">保存</button>
+                <button type="button" class="btn btn-primary saveGroupBtn">保存</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -110,10 +111,30 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary">保存</button>
+                <button type="button" class="btn btn-primary saveLinkBtn">保存</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
 
+<div class="modal fade" id="loginPannel" role="dialog" aria-labelledby="login-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="login-title">注册登录</h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">请使用用户名密码登录，未注册需填写邮箱</p>
+                <input type="text" class="form-control userName" placeholder="用户名">
+                <input type="password" class="form-control passwd" placeholder="密码">
+                <input type="text" class="form-control email" placeholder="邮箱">
+            </div>
+            <div class="modal-footer" style="margin: 0 auto;text-align: center;">
+                <button type="button" class="btn btn-primary signupBtn">注册</button>
+                <button type="button" class="btn btn-primary loginBtn">登录</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

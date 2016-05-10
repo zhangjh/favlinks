@@ -24,7 +24,20 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes(mongoose));
+app.use(session({
+  secret: "weird sheep",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {user:"default",maxAge: 60000}
+}));
+
+app.get('/', routes.index(mongoose));
+app.get('/add',routes.add(mongoose));
+app.get('/logout',function (req,res) {
+  //清除session
+  delete req.session;
+  res.redirect("/");
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

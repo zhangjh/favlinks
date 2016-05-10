@@ -25,6 +25,10 @@ footer p {
   width: 80px;
 }
 
+#logoFont {
+  max-width: 54%;
+}
+
 .navbar-toggle {
   background: #ddd;
   margin-top: 15px;
@@ -41,9 +45,8 @@ footer p {
 
 .contentwrap {
   /*border: 1px solid #e8e8e8;*/
-  margin: 0 auto;
+  margin: 40px auto 50px auto;
   max-width: 1260px;
-  margin-top: 40px;
 }
 
 .groupWrap {
@@ -127,7 +130,7 @@ div.links {
   font-weight: bold;
 }
 
-.addNewLinksName,.addNewLinksUrl {
+.addNewLinksName,.addNewLinksUrl,.userName,.passwd,.email {
   width: 70%;
   margin: 8px auto;
 }
