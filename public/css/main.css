@@ -13,6 +13,7 @@ header a {
   color: #777;
 }
 
+
 footer p {
   text-align: center;
 }
@@ -93,7 +94,7 @@ div.links {
   color:#666;
   margin:6px 5px;
   border: 1px solid #e8e8e8;
-  /*background: #fafafa;*/
+  background: azure;
 }
 
 .linkName {
@@ -133,4 +134,41 @@ div.links {
 .addNewLinksName,.addNewLinksUrl,.userName,.passwd,.email {
   width: 70%;
   margin: 8px auto;
+}
+
+#forgetPasswd {
+  margin: 10px;
+  font-size: smaller;
+}
+
+.powered-by {
+  display: inline-block;
+}
+
+.powered-by::after {
+  content: "|";
+  padding-left: 10px;
+}
+
+.powered-by:last-child::after {
+  content: none;
+}
+
+#footer .container {
+  margin: 10px auto;
+}
+
+.footer-info {
+  text-align: center;
+}
+
+.footer-info a {
+  color: black;
+  border-bottom: 1px solid #999;
+  margin-left: 10px;
+}
+
+#loginUser {
+  color: black;
+  font-weight: bold;
 }

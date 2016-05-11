@@ -185,3 +185,14 @@ function remove() {
 $("#login").on("click",function () {
     $("#loginPannel").modal("show");
 });
+
+//设置用户名
+(function () {
+    var cookie = document.cookie.split(";");
+    for(var i in cookie){
+        if(!/user/.test(cookie[i])){
+            continue;
+        }
+        $("#loginUser").text(cookie[i].split("=")[1]);
+    }
+})();

@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 
 var routes = require('./routes/index');
+var users = require('./routes/login');
 
 var mongoose = require("./lib/mongoose");
 
@@ -28,16 +29,16 @@ app.use(session({
   secret: "weird sheep",
   resave: false,
   saveUninitialized: true,
-  cookie: {user:"default",maxAge: 60000}
+  cookie: {user:"default",maxAge: 14*24*60*60*1000}
 }));
 
 app.get('/', routes.index(mongoose));
 app.get('/add',routes.add(mongoose));
-app.get('/logout',function (req,res) {
-  //清除session
-  delete req.session;
-  res.redirect("/");
-});
+app.post('/login',users.login(mongoose));
+app.post('/signup',users.signup(mongoose));
+app.get('/logout',users.logout());
+app.post('/forget',users.forget(mongoose));
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

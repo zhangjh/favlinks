@@ -1,7 +1,6 @@
 var routes = {};
 routes.index = function(mongoose){
     return function(req,res){
-        //req.session.user = "test";
         var findPattern = {user:"default"};
         if(req.session && req.session.user){
             findPattern = {user:req.session.user};
