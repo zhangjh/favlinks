@@ -11,9 +11,10 @@ $(document).on("keyup",function () {
     if(user && passwd && email){
         var validPattern = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
         if(!validPattern.test(email)){
-            $(this).addClass("alert-danger");
+            $("#loginPannel .email").addClass("alert-danger");
+            $("#signupBtn").attr("disabled","disabled");
         }else {
-            $(this).removeClass("alert-danger");
+            $("#loginPannel .email").removeClass("alert-danger");
             $("#signupBtn").removeAttr("disabled");
         }
     }
@@ -43,22 +44,24 @@ $("#signupBtn").on("click",function () {
     var user = $("#loginPannel .userName").val(),
         passwd = $("#loginPannel .passwd").val(),
         email = $("#loginPannel .email").val();
-    $.ajax({
-        url: "/signup",
-        type: "POST",
-        data: {user: user,passwd: passwd, email: email}
-    }).done(function (ret) {
-        if(ret.status == 0){
-            //cookie 14天
-            var expires = new Date();
-            expires.setTime(expires.getTime() + 14*24*60*60*1000);
-            document.cookie = "user=" + user + ";expires=" + expires.toGMTString();
-            alert(ret.msg);
-            window.location.reload();
-        }else {
-            alert("注册失败：" + ret.msg);
-        }
-    });
+    if(user && passwd && email){
+        $.ajax({
+            url: "/signup",
+            type: "POST",
+            data: {user: user,passwd: passwd, email: email}
+        }).done(function (ret) {
+            if(ret.status == 0){
+                //cookie 14天
+                var expires = new Date();
+                expires.setTime(expires.getTime() + 14*24*60*60*1000);
+                document.cookie = "user=" + user + ";expires=" + expires.toGMTString();
+                alert(ret.msg);
+                window.location.reload();
+            }else {
+                alert("注册失败：" + ret.msg);
+            }
+        });
+    }
 });
 
 $("#forgetPasswd").on("click",function () {

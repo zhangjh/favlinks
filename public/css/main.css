@@ -78,6 +78,7 @@ div.links {
   top: 5px;
   left:10px;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .addGroupBtn{
@@ -131,7 +132,7 @@ div.links {
   font-weight: bold;
 }
 
-.addNewLinksName,.addNewLinksUrl,.userName,.passwd,.email {
+.modal-body > input,.addNewLinksName,.addNewLinksUrl,.userName,.passwd,.email {
   width: 70%;
   margin: 8px auto;
 }
@@ -171,4 +172,20 @@ div.links {
 #loginUser {
   color: black;
   font-weight: bold;
+}
+
+#change {
+  display: none;
+  position: absolute;
+  top: 250px;
+  left: 250px;
+}
+
+#update,#remove {
+  border: 1px solid blue;
+  border-radius: 2px;
+  background: #eee;
+  padding: 2px;
+  margin: 2px;
+  cursor: pointer;
 }

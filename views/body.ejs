@@ -54,10 +54,13 @@
                             linkName = ret[j].linkName,
                             url = ret[j].url.split(/(ftp|https?):\/\//);
                             url = url[url.length - 1];
+                            if(!/^http/.test(url)){
+                                url = "//" + url;
+                            }
                             if(subGroup == group){
                         %>
                             <div class="links">
-                                <a href="//<%= url %>" target="_blank">
+                                <a href="<%= url %>" target="_blank">
                                     <span style="" class="linkName"><%= linkName %></span>
                                 </a>
                                 <span class="glyphicon glyphicon-edit" aria-hidden="true" style="display: none;"></span>
@@ -135,6 +138,48 @@
                 <button type="button" class="btn btn-primary" id="signupBtn" disabled>注册</button>
                 <button type="button" class="btn btn-primary" id="loginBtn" disabled>登录</button>
                 <a href="javascript:;" id="forgetPasswd">忘记密码？</a>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id="change">
+    <div id="update">修改</div>
+    <div id="remove">删除</div>
+</div>
+
+<div class="modal fade" id="updatePannel" role="dialog" aria-labelledby="update-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="update-title">修改链接</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control link" placeholder="链接名字">
+                <input type="text" class="form-control url" placeholder="链接地址">
+            </div>
+            <div class="modal-footer" style="margin: 0 auto;text-align: center;">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="updateBtn">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="updateGroupPannel" role="dialog" aria-labelledby="updateGroup-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="updateGroup-title">修改组名</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control newGroup" placeholder="新的组名">
+            </div>
+            <div class="modal-footer" style="margin: 0 auto;text-align: center;">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="updateGroupBtn">确定</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

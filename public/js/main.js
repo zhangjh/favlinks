@@ -4,6 +4,13 @@ Listener.event = function (ele,ev,fn) {
     ele.on(ev,fn);
 };
 
+function displayChange(editBtn,display) {
+    var l = editBtn.offset().left,
+        t = editBtn.offset().top;
+    $("#change").css({top: t+30,left: l});
+    $("#change").css({display: display});
+}
+
 var effectFuns = {
     addGroupCb: function (ele,ev) {
       switch (ev){
@@ -63,7 +70,9 @@ var effectFuns = {
                         boxShadow: "1px 1px 10px 1px lightblue",
                         fontSize: "larger"
                     });
-                    $(this).find(".glyphicon-edit").show();
+                    var editBtn = $(this).find(".glyphicon-edit");
+                    editBtn.show();
+                    // displayChange(editBtn,"block");
                 });
                 break;
             case "mouseout":
@@ -72,7 +81,9 @@ var effectFuns = {
                         boxShadow: "none",
                         fontSize: "normal"
                     });
-                    $(this).find(".glyphicon-edit").hide();
+                    var editBtn = $(this).find(".glyphicon-edit");
+                    editBtn.hide();
+                    // displayChange(editBtn,"none");
                 });
                 break;
         }
@@ -130,6 +141,9 @@ var effectFuns = {
             Listener.event(ele,ev,function () {
                 var name = $("#addNewLinkPopup .addNewLinksName").val();
                 var url = $("#addNewLinkPopup .addNewLinksUrl").val();
+                if(!/^http/.test(url)){
+                    url = "//" + url;
+                }
                 var insertHtml = "<div class='links'><a target='_blank' href='" + url + "'><span class='linkName'>" + name+ "</span></a><span class='glyphicon glyphicon-edit' aria-hidden='true' style='display: none;'></span></div>";
                 var index = parseInt($(this).attr("index")) + 1;
                 $(".groupWrap:nth-child(" + index + ") .links:last").before(insertHtml);
@@ -196,3 +210,58 @@ $("#login").on("click",function () {
         $("#loginUser").text(cookie[i].split("=")[1]);
     }
 })();
+
+(function () {
+    $("span.glyphicon.glyphicon-edit").click(function () {
+        var that = $(this);
+        if ($("#change").css("display") == "none") {
+            $(this).parents(".links").unbind("mouseout");
+            displayChange($(this), "block");
+        } else {
+            $(this).parents(".link").bind("mouseout");
+            displayChange($(this), "none");
+        }
+
+        $("#update").click(function () {
+            $("#updatePannel").modal("show");
+        });
+
+        $("#updateBtn").click(function () {
+            var name = $("#updatePannel .link").val(),
+                url = $("#updatePannel .url").val();
+            if(!/^http/.test(url)){
+                url = "//" + url;
+            }
+            if(!name && !url){
+                alert("请至少填写一项修改.");
+            }else {
+                if(name)that.prev().children("span.linkName").text(name);
+                if(url)that.prev().attr("href",url);
+                //更新数据库
+
+                $("#updatePannel").modal("hide");
+            }
+        });
+        
+        $("#remove").click(function () {
+            that.hide();
+            $("#change").hide();
+            that.parents(".links").remove();
+
+        });
+    });
+})();
+
+(function () {
+    $(".groupName").click(function () {
+        var that = $(this);
+        $("#updateGroupPannel").modal("show");
+        $("#updateGroupBtn").click(function () {
+            var newGroup = $(".newGroup").val();
+            if(newGroup)that.text(newGroup);
+            $("#updateGroupPannel").modal("hide");
+            //TODO：更新数据库
+        });
+    });
+})();
+
