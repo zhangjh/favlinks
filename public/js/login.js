@@ -55,8 +55,9 @@ $("#signupBtn").on("click",function () {
                 var expires = new Date();
                 expires.setTime(expires.getTime() + 14*24*60*60*1000);
                 document.cookie = "user=" + user + ";expires=" + expires.toGMTString();
-                alert(ret.msg);
-                window.location.reload();
+                // alert(ret.msg);
+                $("#loginTips").modal("show");
+                // window.location.reload();
             }else {
                 alert("注册失败：" + ret.msg);
             }
@@ -78,4 +79,13 @@ $("#forgetPasswd").on("click",function () {
             alert(ret.msg);
         });
     }
+});
+
+$("#loginTipsBtn").on("click",function () {
+    //TODO：复制defaul的数据给当前注册用户
+
+});
+
+$("#loginTips").on("click",function () {
+    window.location.reload();
 });

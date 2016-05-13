@@ -117,7 +117,7 @@ var effectFuns = {
                     effectFuns.addLinkCb($(".addNewLinks"),"mouseover");
                     effectFuns.addLinkCb($(".addNewLinks"),"mouseout");
                     effectFuns.addLinkCb($(".addNewLinks"),"click");
-                    //保存新组数据到数据库
+                    //TODO: 保存新组数据到数据库
                 }
             });
         }
@@ -151,7 +151,7 @@ var effectFuns = {
                 //添加事件
                 effectFuns.linkCb($(".links"),"mouseover");
                 effectFuns.linkCb($(".links"),"mouseout");
-                //存到数据库，读取用户信息，存到对应的数据库表
+                //TODO: 存到数据库，读取用户信息，存到对应的数据库表
 
             });
         }
@@ -176,9 +176,18 @@ effectFuns.addNewLinkValidCheckCb($(".addNewLinksUrl"),"keyup");
 effectFuns.saveLinkCb($(".saveLinkBtn"),"click");
 
 function dbOperation(url,collection,data) {
+    var cookies = document.cookie.split(";");
+    var user = "";
+    for(var i in cookies){
+        if(/user/.test(cookies[i])){
+            user = cookies[i].split("=")[1];
+            break;
+        }
+    }
+
     $.ajax({
         url: url,
-        data: {collection:collection,data:data}
+        data: {collection:collection,data:data,user:user}
     }).done(function (ret) {
         alert(ret);
     });

@@ -2,7 +2,10 @@
  * Created by jihong.zjh on 2016/5/11.
  */
 var nodemailer = require('nodemailer');
+var crypto = require("crypto");
+
 var users = {};
+var secret = "weird sheep";
 
 function sendMail(to,content) {
     var transport = nodemailer.createTransport("SMTP",{
@@ -26,6 +29,21 @@ function sendMail(to,content) {
     });
 }
 
+//加解密
+function encrypt(str,secret) {
+    var cipher = crypto.createCipher('aes192',secret);
+    var enc = cipher.update(str,'utf8','hex');
+    enc += cipher.final('hex');
+    return enc;
+}
+
+function decrypt(str,secret) {
+    var decipher = crypto.createDecipher('aes192',secret);
+    var dec = decipher.update(str,'hex','utf8');
+    dec += decipher.final('utf8');
+    return dec;
+}
+
 users.login = function (mongoose) {
     return function (req,res) {
         var user = req.body.user,
@@ -34,11 +52,9 @@ users.login = function (mongoose) {
             //判断用户名密码
             //登录成功后写入cookie，seession，跳转
             if(resu.length){
-                if(passwd == resu[0].passwd){
+                if(passwd == decrypt(resu[0].passwd,secret)){
                     //登录成功
-                    console.log("test:"+user);
                     req.session.user = user;
-                    console.log(req.session.user);
                     res.json({status: 0,msg: "登录成功."});
                 }
             }else {
@@ -53,13 +69,13 @@ users.signup = function (mongoose) {
         var user = req.body.user,
             passwd = req.body.passwd,
             email = req.body.email;
-
+        var encPasswd = encrypt(passwd,secret);
+        
         mongoose.find("user",{user:user},function (resu) {
-            console.log("res:",resu);
             if(resu.length){
                 res.json({status:1,msg:"用户名已经被注册!"});
             }else {
-                mongoose.insert("user",{user: user,passwd: passwd,email: email},function () {
+                mongoose.insert("user",{user: user,passwd: encPasswd,email: email},function () {
                     req.session.user = user;
                     res.clearCookie("user");
 

@@ -1,4 +1,13 @@
 var routes = {};
+
+//更改操作时校验用户合法性
+function validUserCheck(req,user) {
+    var sessionUser = req.session.user;
+    console.log(sessionUser);
+    if(sessionUser == user)return true;
+    else return false;
+}
+
 routes.index = function(mongoose){
     return function(req,res){
         var findPattern = {user:"default"};
@@ -28,20 +37,24 @@ routes.add = function (mongoose) {
         var collection = req.query.collection,
             data = req.query.data,
             user = req.query.user;
-        console.log(typeof data);
-        var findPattern = {user:user};
-        if(!data){
-            res.json({status:1,msg:"Error: no data given."});
-        }
-        console.log("collect:",collection,"data:",data);
-        mongoose.find(collection,findPattern,function (resu) {
-            if(!resu.length){
-                //当前没有则插入
-                mongoose.insert(collection,data,function (ret) {
-                    res.send(ret);
-                });
+        //用户校验
+        if(validUserCheck(req,user)){
+            var findPattern = {user:user};
+            if(!data){
+                res.json({status:1,msg:"Error: no data given."});
             }
-        });
+            console.log("collect:",collection,"data:",data);
+            mongoose.find(collection,findPattern,function (resu) {
+                if(!resu.length){
+                    //当前没有则插入
+                    mongoose.insert(collection,data,function (ret) {
+                        res.json({status: 0,msg: ret});
+                    });
+                }
+            });
+        }else {
+            res.json({status: 1,msg: "Access Denied！请检查是否登录."});
+        }
     };
 };
 
@@ -50,16 +63,20 @@ routes.update = function (mongoose) {
       var collection = req.query.collection,
           data = req.query.data,
           user = req.query.user;
-        var findPattern = {user: user};
-        mongoose.find(collection,findPattern,function (resu) {
-            if(!resu.length){
-                res.json({status:1,msg:"Error: no data to update."});
-            }else {
-                mongoose.update(collection,findPattern,data,{},function (ret) {
-                    res.send(ret);
-                });
-            }
-        });
+        if(validUserCheck(req,user)){
+            var findPattern = {user: user};
+            mongoose.find(collection,findPattern,function (resu) {
+                if(!resu.length){
+                    res.json({status:1,msg:"Error: no data to update."});
+                }else {
+                    mongoose.update(collection,findPattern,data,{},function (ret) {
+                        res.json({status: 0,msg: ret});
+                    });
+                }
+            });
+        }else {
+            res.json({status: 1,msg: "Access Denied！请检查是否登录."});
+        }
     };
 };
 
@@ -68,53 +85,20 @@ routes.remove  = function (mongoose) {
       var collection = req.query.collection,
           data = req.query.data,
           user = req.query.user;
-      var findPattern = {user: user};
-      mongoose.find(collection,findPattern,function (resu) {
-          if(!resu.length){
-              res.json({status:1,msg:"Error: no data to remove."});
-          }else {
-              mongoose.remove(collection,data,function (ret) {
-                  res.send(ret);
-
-              });
-          }
-      });
-  }
-};
-
-routes.signup = function (mongoose) {
-  return function (req,res) {
-      var user = req.query.username,
-          passwd = req.query.passwd,
-          email = req.query.email;
-
-      mongoose.find("user",{user:user},function (resu) {
-          if(resu.length){
-              res.json({status:1,msg:"用户名已经被注册!"});
-          }else {
-              mongoose.insert("user",{user:user,passwd:passwd,email:email},function (ret) {
-                  //写cookie，session
-                  res.writeHead(200,{
-                      'Set-Cookie': 'user=' + user,
-                      'Content-Type': 'text/plan'
+      if(validUserCheck(req,user)){
+          var findPattern = {user: user};
+          mongoose.find(collection,findPattern,function (resu) {
+              if(!resu.length){
+                  res.json({status:1,msg:"Error: no data to remove."});
+              }else {
+                  mongoose.remove(collection,data,function (ret) {
+                      res.json({status: 0,msg: ret});
                   });
-                  req.session.user = user;
-                  res.json({status:0,msg:"注册成功！"});
-              });
-          }
-      });
-  }
-};
-
-routes.login = function (mongoose) {
-  return function (req,res) {
-      var user = req.query.username,
-          passwd = req.query.passwd;
-      mongoose.find("user",{user:user},function (resu) {
-          //判断用户名密码
-          //登录成功后写入cookie，seession，跳转
-      });
-
+              }
+          });
+      }else {
+          res.json({status: 1,msg: "Access Denied！请检查是否登录."});
+      }
   }
 };
 
