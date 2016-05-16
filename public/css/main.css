@@ -46,7 +46,7 @@ footer p {
 
 .contentwrap {
   /*border: 1px solid #e8e8e8;*/
-  margin: 40px auto 50px auto;
+  margin: 40px auto 80px auto;
   max-width: 1260px;
 }
 
@@ -196,4 +196,29 @@ div.links {
 
 #loginTips p {
   margin-left: 5%;
+}
+
+#goTop {
+  display: none;
+  position: fixed;
+  right: 20px;
+  bottom: 90px;
+  z-index: 1000;
+  height: 27px;
+  width: 28px;
+  background: #000;
+  /*color: #000;*/
+  cursor: pointer;
+}
+
+#goTop:before {
+  display: block;
+  content: " ";
+  margin-top: 9px;
+  margin-left: 4px;
+  width: 0;
+  height: 0;
+  border-width: 0 9px 8px;
+  border-color: transparent transparent #fff;
+  border-style: solid;
 }

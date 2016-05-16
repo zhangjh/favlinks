@@ -55,6 +55,7 @@ users.login = function (mongoose) {
                 if(passwd == decrypt(resu[0].passwd,secret)){
                     //登录成功
                     req.session.user = user;
+                    req.session.isLogin = true;
                     res.json({status: 0,msg: "登录成功."});
                 }
             }else {
@@ -77,7 +78,8 @@ users.signup = function (mongoose) {
             }else {
                 mongoose.insert("user",{user: user,passwd: encPasswd,email: email},function () {
                     req.session.user = user;
-                    res.clearCookie("user");
+                    req.session.isLogin = true;
+                    res.clearCookie("user",{});
 
                     res.json({status: 0,msg:"注册成功！"});
                 });
@@ -90,7 +92,8 @@ users.logout = function () {
     return function (req,res) {
         //清除session,cookie
         req.session.destroy(function () {
-            res.clearCookie("user");
+            res.clearCookie("user",{});
+            res.cookie("isLogin","false");
             res.redirect("/");
         });
     };

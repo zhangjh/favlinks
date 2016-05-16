@@ -34,6 +34,10 @@ app.use(session({
 
 app.get('/', routes.index(mongoose));
 app.get('/add',routes.add(mongoose));
+app.get('/remove',routes.remove(mongoose));
+app.get('/update',routes.update(mongoose));
+app.get('/select',routes.select(mongoose));
+app.get('/copy',routes.copy(mongoose));
 app.post('/login',users.login(mongoose));
 app.post('/signup',users.signup(mongoose));
 app.get('/logout',users.logout());

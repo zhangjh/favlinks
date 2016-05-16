@@ -4,6 +4,18 @@ Listener.event = function (ele,ev,fn) {
     ele.on(ev,fn);
 };
 
+function isLogin() {
+    var cookie = document.cookie || "";
+    cookie = cookie.split(";");
+    for(var i in cookie){
+        if(/isLogin/.test(cookie[i])){
+            if(cookie[i].split("=")[1] === "true")return true;
+            else return false;
+        }
+    }
+    return false;
+}
+
 function displayChange(editBtn,display) {
     var l = editBtn.offset().left,
         t = editBtn.offset().top;
@@ -91,33 +103,44 @@ var effectFuns = {
     saveGroupCb: function (ele,ev) {
         if(ev == "click"){
             Listener.event(ele,ev,function () {
+                if(!isLogin()){
+                    alert("请先登录！");
+                    return;
+                }
                 var addGroupName = $("#addNewGroupPopup input").val();
                 var curGroupNames = [];
                 var duplicate = false;
-                $(".groupName").each(function (i,ele) {
-                    curGroupNames.push($(ele).text());
-                });
-                var i = 0;
-                for(i in curGroupNames){
-                    if(curGroupNames[i] == addGroupName){
-                        duplicate = true;
-                        break;
+                if(addGroupName){
+                    $(".groupName").each(function (i,ele) {
+                        curGroupNames.push($(ele).text());
+                    });
+                    var i = 0;
+                    for(i in curGroupNames){
+                        if(curGroupNames[i] == addGroupName){
+                            duplicate = true;
+                            break;
+                        }
                     }
-                }
-                if(duplicate){
-                    alert("已经存在组：'" + addGroupName + ",'请输入不重复的组名！");
-                }else {
-                    //页面插入组元素
-                    var insertHtml = "<div class='groupWrap'><div class='group'><span class='groupName'>" + addGroupName + "</span><span class='glyphicon glyphicon-plus addGroupBtn' aria-hidden='true'></span></div>" +
-                        "<div class='links addNewLinks'><span class='glyphicon glyphicon-plus' aria-hidden='true'></span><a href='javascript:;'><span class='linkName'>添加新链接</span></a></div></div>";
+                    if(duplicate){
+                        alert("已经存在组：'" + addGroupName + ",'请输入不重复的组名！");
+                    }else {
+                        //页面插入组元素
+                        var insertHtml = "<div class='groupWrap'><div class='group'><span class='groupName'>" + addGroupName + "</span><span class='glyphicon glyphicon-plus addGroupBtn' aria-hidden='true'></span></div>" +
+                            "<div class='links addNewLinks'><span class='glyphicon glyphicon-plus' aria-hidden='true'></span><a href='javascript:;'><span class='linkName'>添加新链接</span></a></div></div>";
 
-                    $(".groupWrap:last").append(insertHtml);
-                    $("#addNewGroupPopup").modal("hide");
-                    //增加事件
-                    effectFuns.addLinkCb($(".addNewLinks"),"mouseover");
-                    effectFuns.addLinkCb($(".addNewLinks"),"mouseout");
-                    effectFuns.addLinkCb($(".addNewLinks"),"click");
-                    //TODO: 保存新组数据到数据库
+                        $(".contentwrap").append(insertHtml);
+                        $("#addNewGroupPopup").modal("hide");
+                        //增加事件
+                        effectFuns.addLinkCb($(".addNewLinks"),"mouseover");
+                        effectFuns.addLinkCb($(".addNewLinks"),"mouseout");
+                        effectFuns.addLinkCb($(".addNewLinks"),"click");
+                        effectFuns.addGroupCb($(".addGroupBtn"),"mouseover");
+                        effectFuns.addGroupCb($(".addGroupBtn"),"mouseout");
+                        effectFuns.addGroupCb($(".addGroupBtn"),"click");
+                        //TODO: 保存新组数据到数据库
+                    }
+                }else {
+                    $("#addNewGroupPopup input").addClass("alert-danger");
                 }
             });
         }
@@ -139,20 +162,30 @@ var effectFuns = {
     saveLinkCb: function (ele,ev) {
         if(ev == "click"){
             Listener.event(ele,ev,function () {
+                if(!isLogin()){
+                    alert("请先登录！");
+                    return;
+                }
                 var name = $("#addNewLinkPopup .addNewLinksName").val();
                 var url = $("#addNewLinkPopup .addNewLinksUrl").val();
-                if(!/^http/.test(url)){
-                    url = "//" + url;
+                if(name && url){
+                    if(!/^http/.test(url)){
+                        url = "//" + url;
+                    }
+                    var insertHtml = "<div class='links'><a target='_blank' href='" + url + "'><span class='linkName'>" + name+ "</span></a><span class='glyphicon glyphicon-edit' aria-hidden='true' style='display: none;'></span></div>";
+                    var index = parseInt($(this).attr("index")) + 1;
+                    $(".groupWrap:nth-child(" + index + ") .links:last").before(insertHtml);
+                    $("#addNewLinkPopup").modal('hide');
+                    //添加事件
+                    effectFuns.linkCb($(".links"),"mouseover");
+                    effectFuns.linkCb($(".links"),"mouseout");
+                    //TODO: 存到数据库，读取用户信息，存到对应的数据库表
+                }else {
+                    if(!name)$("#addNewLinkPopup .addNewLinksName").addClass("alert-danger");
+                    else $("#addNewLinkPopup .addNewLinksName").removeClass("alert-danger");
+                    if(!url)$("#addNewLinkPopup .addNewLinksUrl").addClass("alert-danger");
+                    else $("#addNewLinkPopup .addNewLinksUrl").removeClass("alert-danger");
                 }
-                var insertHtml = "<div class='links'><a target='_blank' href='" + url + "'><span class='linkName'>" + name+ "</span></a><span class='glyphicon glyphicon-edit' aria-hidden='true' style='display: none;'></span></div>";
-                var index = parseInt($(this).attr("index")) + 1;
-                $(".groupWrap:nth-child(" + index + ") .links:last").before(insertHtml);
-                $("#addNewLinkPopup").modal('hide');
-                //添加事件
-                effectFuns.linkCb($(".links"),"mouseover");
-                effectFuns.linkCb($(".links"),"mouseout");
-                //TODO: 存到数据库，读取用户信息，存到对应的数据库表
-
             });
         }
     }
@@ -274,3 +307,35 @@ $("#login").on("click",function () {
     });
 })();
 
+function adjustMobile() {
+    var groupW = $(".groupWrap").width();
+    var w = (groupW - 30)/2;
+    $(".links").css({width: w});
+    $(".addNewLinks > a > span").css({fontSize: "smaller"});
+}
+
+(function () {
+    var w = $(window).width(),
+        h = $(window).height();
+    if(h > w){
+        adjustMobile();
+    }
+})();
+
+(function () {
+    $(document).scroll(function () {
+        var scrollTop = $(document).scrollTop(),
+            headerHeight = $("#header").height();
+        if(scrollTop > headerHeight){
+            //滚动距离超过了header，则展示返回顶部按钮
+            $("#goTop").show();
+        }else {
+            $("#goTop").hide();
+        }
+    });
+    $("#goTop").click(function () {
+        $("body").animate({
+            scrollTop: 0
+        },400);
+    });
+})();

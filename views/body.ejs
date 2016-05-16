@@ -58,14 +58,16 @@
                                 url = "//" + url;
                             }
                             if(subGroup == group){
+                                if(linkName){
                         %>
-                            <div class="links">
-                                <a href="<%= url %>" target="_blank">
-                                    <span style="" class="linkName"><%= linkName %></span>
-                                </a>
-                                <span class="glyphicon glyphicon-edit" aria-hidden="true" style="display: none;"></span>
-                            </div>
+                                <div class="links">
+                                    <a href="<%= url %>" target="_blank">
+                                        <span style="" class="linkName"><%= linkName %></span>
+                                    </a>
+                                    <span class="glyphicon glyphicon-edit" aria-hidden="true" style="display: none;"></span>
+                                </div>
                         <%
+                                }
                             }
                         }
                         %>
@@ -197,9 +199,11 @@
                 <p>您可以后续修改</p>
             </div>
             <div class="modal-footer" style="margin: 0 auto;text-align: center;">
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-default" id="cancelTipsBtn" data-dismiss="modal">取消</button>
                 <button type="button" class="btn btn-primary" id="loginTipsBtn">确定</button>
             </div>
         </div><!-- /.modal-content -->
     </div>
 </div>
+
+<a href="javascript:;" id="goTop"></a>

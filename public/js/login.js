@@ -20,6 +20,19 @@ $(document).on("keyup",function () {
     }
 });
 
+function getUser() {
+    var cookie = document.cookie || "";
+    var user = "";
+    cookie = cookie.split(";");
+    for(var i in cookie){
+        if(/user/.test(cookie[i])){
+            user = cookie[i].split("=")[1];
+            break;
+        }
+    }
+    return user;
+}
+
 $("#loginBtn").on("click",function () {
     var user = $(".userName").val();
     var passwd = $(".passwd").val();
@@ -34,7 +47,7 @@ $("#loginBtn").on("click",function () {
             var expires = new Date();
             expires.setTime(expires.getTime() + 14*24*60*60*1000);
             document.cookie = "user=" + user + ";expires=" + expires.toGMTString();
-
+            document.cookie = "isLogin=true";
             window.location.reload();
         }
     });
@@ -55,6 +68,7 @@ $("#signupBtn").on("click",function () {
                 var expires = new Date();
                 expires.setTime(expires.getTime() + 14*24*60*60*1000);
                 document.cookie = "user=" + user + ";expires=" + expires.toGMTString();
+                document.cookie = "isLogin=true";
                 // alert(ret.msg);
                 $("#loginTips").modal("show");
                 // window.location.reload();
@@ -83,7 +97,28 @@ $("#forgetPasswd").on("click",function () {
 
 $("#loginTipsBtn").on("click",function () {
     //TODO：复制defaul的数据给当前注册用户
+    var user = getUser();
+    $.ajax({
+        url: "/copy",
+        data: {collection:"links",find:{user:"default"},user: user}
+    }).done(function (ret) {
+        if(ret.status == 0){
+            window.location.reload();
+        }
+    });
+});
 
+$("#cancelTipsBtn").on("click",function () {
+    //TODO: 仅生成基本的数据给新注册用户
+    var user = getUser();
+    $.ajax({
+        url: "/add",
+        data: {collection:"links",user:user,data:{group:"常用",user:user}}
+    }).done(function (ret) {
+        if(ret.status == 0){
+            window.location.reload();
+        }
+    });
 });
 
 $("#loginTips").on("click",function () {
