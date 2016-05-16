@@ -265,6 +265,10 @@ $("#login").on("click",function () {
         }
 
         $("#update").click(function () {
+            if(!isLogin()){
+                alert("请先登录！");
+                return;
+            }
             $("#updatePannel").modal("show");
         });
 
@@ -286,6 +290,10 @@ $("#login").on("click",function () {
         });
         
         $("#remove").click(function () {
+            if(!isLogin()){
+                alert("请先登录！");
+                return;
+            }
             that.hide();
             $("#change").hide();
             that.parents(".links").remove();
