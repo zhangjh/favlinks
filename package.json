@@ -18,7 +18,8 @@
     "morgan": "~1.6.1",
     "passport": "~0.3.2",
     "serve-favicon": "~2.3.0",
-    "supervisor": "~0.10.0"
+    "supervisor": "~0.10.0",
+    "nodemailer": "~2.4.1"
   },
   "description": "个性化网址收藏导航",
   "main": "app.js",
