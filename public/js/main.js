@@ -347,3 +347,33 @@ function adjustMobile() {
         },400);
     });
 })();
+
+function goBottom() {
+    $("body").animate({
+        scrollTop: document.body.scrollHeight
+    },1000);
+}
+
+(function () {
+    $("section img").hover(function (e) {
+        e.stopPropagation();
+        $(this).animate({height: "200px"},200,function () {
+            goBottom();
+        });
+
+    },function () {
+        $(this).animate({height: "100px"});
+    });
+
+    $(".fa-weixin").click(function () {
+
+        $("#wx_img_wrapper").show();
+        $(".content").css({opacity: "0.2"});
+
+        $("#wx_img_wrapper .close").click(function () {
+            $("#wx_img_wrapper").hide();
+            $(".content").css({opacity: "1"});
+        });
+    });
+})();
+
