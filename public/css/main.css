@@ -246,12 +246,16 @@ section {
   /*height: 200px;*/
 /*}*/
 
-section a,section a:hover {
+aside .row a,aside .row a:hover {
   color: white;
 }
 
-section a:hover {
+aside .row a:hover {
   text-decoration: none;
+}
+
+#social {
+  margin-top: 5%;
 }
 
 #social a {

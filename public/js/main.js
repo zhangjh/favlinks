@@ -355,7 +355,7 @@ function goBottom() {
 }
 
 (function () {
-    $("section img").hover(function (e) {
+    $("aside .row img").hover(function (e) {
         e.stopPropagation();
         $(this).animate({height: "200px"},200,function () {
             goBottom();
