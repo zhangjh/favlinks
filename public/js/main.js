@@ -357,7 +357,7 @@ function goBottom() {
 (function () {
     $("aside .row img").hover(function (e) {
         e.stopPropagation();
-        $(this).animate({height: "200px"},200,function () {
+        $(this).animate({height: "180px"},200,function () {
             goBottom();
         });
 
