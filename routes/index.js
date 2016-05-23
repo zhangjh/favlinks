@@ -3,7 +3,7 @@ var routes = {};
 //更改操作时校验用户合法性
 function validUserCheck(req,user) {
     var sessionUser = req.session.user;
-    console.log(sessionUser);
+    // console.log(sessionUser);
     if(sessionUser == user)return true;
     else return false;
 }
@@ -51,21 +51,26 @@ routes.index = function(mongoose){
 routes.add = function (mongoose) {
     return function (req,res) {
         var collection = req.query.collection,
+            findPattern = req.query.findPattern || new Object(),
             data = req.query.data,
             user = req.query.user;
         //用户校验
         if(validUserCheck(req,user)){
-            var findPattern = {user:user};
+            findPattern.user = user;
+            data.user = user;
             if(!data){
                 res.json({status:1,msg:"Error: no data given."});
             }
-            console.log("collect:",collection,"data:",data);
+            console.log(findPattern);
             mongoose.find(collection,findPattern,function (resu) {
+                console.log(resu);
                 if(!resu.length){
                     //当前没有则插入
                     mongoose.insert(collection,data,function (ret) {
                         res.json({status: 0,msg: ret});
                     });
+                }else {
+                    res.json({status: 1,msg: "记录已经存在，请勿重复插入！"});
                 }
             });
         }else {
@@ -77,15 +82,18 @@ routes.add = function (mongoose) {
 routes.update = function (mongoose) {
     return function (req,res) {
       var collection = req.query.collection,
+          findPattern = req.query.findPattern,
           data = req.query.data,
           user = req.query.user;
         if(validUserCheck(req,user)){
-            var findPattern = {user: user};
+            findPattern.user = user;
+            console.log(findPattern);
             mongoose.find(collection,findPattern,function (resu) {
+                console.log(resu);
                 if(!resu.length){
                     res.json({status:1,msg:"Error: no data to update."});
                 }else {
-                    mongoose.update(collection,findPattern,data,{},function (ret) {
+                    mongoose.update(collection,findPattern,data,{multi:true},function (ret) {
                         res.json({status: 0,msg: ret});
                     });
                 }

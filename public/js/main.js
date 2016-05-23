@@ -20,14 +20,17 @@ var common = (function ($) {
     };
 
     //ajax执行操作增删改查
-    var dbOperation = function (url,collection,data) {
+    var dbOperation = function (url,collection,findPattern,data,fn) {
         var user = common.getCookie("user");
 
         $.ajax({
             url: url,
-            data: {collection:collection,data:data,user:user}
+            data: {collection:collection,findPattern:findPattern,data:data,user:user}
         }).done(function (ret) {
-            alert(ret);
+            if(ret.status == 0){
+                if(fn)fn();
+            }
+            if(ret.status != "0")alert(ret.msg);
         });
     };
 
@@ -94,14 +97,14 @@ var common = (function ($) {
 })(jQuery);
 
 var db = (function () {
-    var add = function (collection,data) {
-        common.dbOperation("/add",collection,data);
+    var add = function (collection,findPattern,data,fn) {
+        common.dbOperation("/add",collection,findPattern,data,fn);
     };
-    var update = function (collection,data) {
-        common.dbOperation("/update",collection,data);
+    var update = function (collection,findPattern,data,fn) {
+        common.dbOperation("/update",collection,findPattern,data,fn);
     };
-    var remove = function (collection,data) {
-        common.dbOperation("/remove",collection,data)
+    var remove = function (collection,findPattern,data,fn) {
+        common.dbOperation("/remove",collection,findPattern,data,fn)
     };
 
     return {
@@ -127,6 +130,7 @@ var page = (function ($) {
     var linkModify = function () {
         $("span.glyphicon.glyphicon-edit").click(function (e) {
             var that = e.target;
+            $("#change").attr("linkName",$(this).prev().text().trim());
             if ($("#change").css("display") == "none") {
                 $(this).parents(".links").unbind("mouseout");
                 common.displayChange($(this), "block");
@@ -152,36 +156,52 @@ var page = (function ($) {
                 if(!name && !url){
                     alert("请至少填写一项修改.");
                 }else {
-                    if(name)that.prev().children("span.linkName").text(name);
-                    if(url)that.prev().attr("href",url);
                     //更新数据库
-
-                    $("#updatePannel").modal("hide");
+                    db.update("links",{groupName:$(that).parent().siblings(".group").text().trim(),linkName:name},{linkName:name,url:url},function () {
+                        $("#updatePannel").modal("hide");
+                        if(name)$(that).prev().children("span.linkName").text(name);
+                        if(url)$(that).prev().attr("href",url);
+                    });
                 }
             });
 
             $("#remove").click(function () {
-                if(!common.isLogin()){
+                if(!login.isLogin()){
                     alert("请先登录！");
                     return;
+                }else {
+                    //TODO: 数据库删除数据
+                    db.remove("links",{},{linkName:$(this).parent().attr("linkName")},function () {
+                        $("#change").hide();
+                        $(that).parents(".links").remove();
+                    });
                 }
-                that.hide();
-                $("#change").hide();
-                that.parents(".links").remove();
             });
         });
     };
 
     var updateGroup = function () {
         $(".groupName").click(function () {
-            var that = $(this);
-            $("#updateGroupPannel").modal("show");
-            $("#updateGroupBtn").click(function () {
-                var newGroup = $(".newGroup").val();
-                if(newGroup)that.text(newGroup);
-                $("#updateGroupPannel").modal("hide");
-                //TODO：更新数据库
-            });
+            if(!login.isLogin()){
+                alert("请先登录！");
+                return;
+            }else {
+                var that = $(this);
+                var oriGroup = $(this).text();
+                $("#updateGroupPannel").modal("show");
+                $("#updateGroupBtn").click(function () {
+                    var newGroup = $(".newGroup").val();
+                    if(newGroup){
+                        $("#updateGroupPannel").modal("hide");
+                        //TODO：更新数据库
+                        db.update("links",{group:oriGroup},{group:newGroup},function () {
+                            if(newGroup)that.text(newGroup);
+                        });
+                    }else {
+                        alert("请填写组名！");
+                    }
+                });
+            }
         });
     };
 
@@ -288,8 +308,7 @@ var group = (function ($) {
                     //页面插入组元素
                     var insertHtml = "<div class='groupWrap'><div class='group'><span class='groupName'>" + addGroupName + "</span><span class='glyphicon glyphicon-plus addGroupBtn' aria-hidden='true'></span></div>" +
                         "<div class='links addNewLinks'><span class='glyphicon glyphicon-plus' aria-hidden='true'></span><a href='javascript:;'><span class='linkName'>添加新链接</span></a></div></div>";
-
-                    $(".contentwrap").append(insertHtml);
+                    
                     $("#addNewGroupPopup").modal("hide");
                     //增加事件
                     common.Listener(".addNewLinks","mouseover");
@@ -301,6 +320,9 @@ var group = (function ($) {
                     common.Listener(".addGroupBtn","click");
 
                     //TODO: 保存新组数据到数据库
+                    db.add("links",{group:addGroupName},{group:addGroupName},function () {
+                        $(".contentwrap").append(insertHtml);
+                    });
                 }
             }else {
                 alert("请输入组名！");
@@ -356,7 +378,7 @@ var links = (function ($) {
 
         //新加链接的url合法性检查
         common.Listener(".addNewLinksUrl","keyup",function (e) {
-            var pattern = new RegExp("((https?|ftp|mms):\/\/)?([A-z0-9]+[_\-]?[A-z0-9]+\.)*[A-z0-9]+\-?[A-z0-9]+\.[A-z]{2,}(\/.*)*\/?");
+            var pattern = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/i;
             common.validCheck(e.target,pattern);
         });
 
@@ -374,13 +396,31 @@ var links = (function ($) {
                 }
                 var insertHtml = "<div class='links'><a target='_blank' href='" + url + "'><span class='linkName'>" + name+ "</span></a><span class='glyphicon glyphicon-edit' aria-hidden='true' style='display: none;'></span></div>";
                 var index = parseInt($(this).attr("index")) + 1;
-                $(".groupWrap:nth-child(" + index + ") .links:last").before(insertHtml);
+                
                 $("#addNewLinkPopup").modal('hide');
                 //添加事件
-                common.Listener(".links","mouseover");
-                common.Listener(".links","mouseout");
+                common.Listener(".links","mouseover",function () {
+                    $(this).css({
+                        boxShadow: "1px 1px 10px 1px lightblue",
+                        fontSize: "larger"
+                    });
+                    var editBtn = $(this).find(".glyphicon-edit");
+                    editBtn.show();
+                });
+                common.Listener(".links","mouseout",function () {
+                    $(this).css({
+                        boxShadow: "none",
+                        fontSize: "normal"
+                    });
+                    var editBtn = $(this).find(".glyphicon-edit");
+                    editBtn.hide();
+                });
 
                 //TODO: 存到数据库，读取用户信息，存到对应的数据库表
+                var groupName = $(".addNewLinks[index=" + (index-1) +"]").siblings(".group").text().trim();
+                db.add("links",{group:groupName,linkName:name},{group:groupName,linkName:name,url:url},function () {
+                    $(".groupWrap:nth-child(" + index + ") .links:last").before(insertHtml);
+                });
             }else {
                 if(!name)$("#addNewLinkPopup .addNewLinksName").addClass("alert-danger");
                 else $("#addNewLinkPopup .addNewLinksName").removeClass("alert-danger");
