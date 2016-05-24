@@ -41,7 +41,7 @@ routes.index = function(mongoose){
                     groups.push(group);
                 }
             }
-            res.render("index",{
+            res.render("index_min",{
                 title: "favlinks--您的私人收藏夹",ret: ret,groups: groups   
             });
         });
