@@ -9,7 +9,7 @@ var common = (function ($) {
         cookie = cookie.split(";");
         for(var i in cookie){
             if(new RegExp(key).test(cookie[i])){
-                return cookie[i].split("=")[1];
+                return decodeURIComponent(cookie[i].split("=")[1]);
             }
         }
     };

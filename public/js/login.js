@@ -26,7 +26,7 @@ function getUser() {
     cookie = cookie.split(";");
     for(var i in cookie){
         if(/user/.test(cookie[i])){
-            user = cookie[i].split("=")[1];
+            user = decodeURIComponent(cookie[i].split("=")[1]);
             break;
         }
     }
@@ -46,7 +46,7 @@ $("#loginBtn").on("click",function () {
             //cookie 14天
             var expires = new Date();
             expires.setTime(expires.getTime() + 14*24*60*60*1000);
-            document.cookie = "user=" + user + ";expires=" + expires.toGMTString();
+            document.cookie = "user=" + encodeURIComponent(user) + ";expires=" + expires.toGMTString();
             document.cookie = "isLogin=true";
             window.location.reload();
         }else {
@@ -69,11 +69,11 @@ $("#signupBtn").on("click",function () {
                 //cookie 14天
                 var expires = new Date();
                 expires.setTime(expires.getTime() + 14*24*60*60*1000);
-                document.cookie = "user=" + user + ";expires=" + expires.toGMTString();
+                document.cookie = "user=" + encodeURIComponent(user) + ";expires=" + expires.toGMTString();
                 document.cookie = "isLogin=true";
                 // alert(ret.msg);
                 $("#loginTips").modal("show");
-                // window.location.reload();
+                window.location.reload();
             }else {
                 alert("注册失败：" + ret.msg);
             }

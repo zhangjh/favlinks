@@ -17,7 +17,7 @@ routes.index = function(mongoose){
             sessionUser = "default";
         for(var i in cookie){
             if(/user/.test(cookie[i])){
-                cookieUser = cookie[i].split("=")[1];
+                cookieUser = decodeURIComponent(cookie[i].split("=")[1]);
             }
         }
         if(req.session && req.session.user){

@@ -57,6 +57,8 @@ users.login = function (mongoose) {
                     req.session.user = user;
                     req.session.isLogin = true;
                     res.json({status: 0,msg: "登录成功."});
+                }else {
+                    res.json({status: 1,msg: "密码错误！"});
                 }
             }else {
                 res.json({status: 1,msg: "该用户没有注册，请先注册！"});
