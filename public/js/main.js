@@ -145,25 +145,29 @@ var page = (function ($) {
                     return;
                 }
                 $("#updatePannel").modal("show");
+                $("#updateBtn").click(function () {
+                    var name = $("#updatePannel .link").val(),
+                        url = $("#updatePannel .url").val();
+                    var updateCondition = {};
+                    if(url && !/^http/.test(url)){
+                        url = "//" + url;
+                    }
+                    if(!name && !url){
+                        alert("请至少填写一项修改.");
+                    }else {
+                        if(name)updateCondition.linkName = name;
+                        if(url)updateCondition.url = url;
+                        //更新数据库
+                        db.update("links",{group:$(that).parent().siblings(".group").children(".groupName").text().trim().split("\n")[0],linkName:$(that).prev().text().trim()},updateCondition,function () {
+                            $("#updatePannel").modal("hide");
+                            if(name)$(that).prev().children("span.linkName").text(name);
+                            if(url)$(that).prev().attr("href",url);
+                        });
+                    }
+                });
             });
 
-            $("#updateBtn").click(function () {
-                var name = $("#updatePannel .link").val(),
-                    url = $("#updatePannel .url").val();
-                if(!/^http/.test(url)){
-                    url = "//" + url;
-                }
-                if(!name && !url){
-                    alert("请至少填写一项修改.");
-                }else {
-                    //更新数据库
-                    db.update("links",{groupName:$(that).parent().siblings(".group").text().trim(),linkName:name},{linkName:name,url:url},function () {
-                        $("#updatePannel").modal("hide");
-                        if(name)$(that).prev().children("span.linkName").text(name);
-                        if(url)$(that).prev().attr("href",url);
-                    });
-                }
-            });
+
 
             $("#remove").click(function () {
                 if(!login.isLogin()){
@@ -202,6 +206,27 @@ var page = (function ($) {
                     }
                 });
             }
+        });
+    };
+    
+    var deleteGroup = function () {
+        $(".groupName").hover(function () {
+            $(this).children(".close").show();
+        },function () {
+            $(this).children(".close").hide();
+        });
+
+        $(".group .close").click(function (e) {
+            e.stopPropagation();
+            if(!login.isLogin()){
+                alert("请先登录！");
+                return;
+            }
+            var groupName = $(this).parents(".groupName").text().trim().split("\n")[0];
+            db.remove("links",{},{group:groupName},function () {
+                //删除成功后移除该组
+                $(e.target).parents(".groupWrap").remove();
+            });
         });
     };
 
@@ -249,6 +274,7 @@ var page = (function ($) {
         setUserName: setUserName,
         linkModify: linkModify,
         updateGroup: updateGroup,
+        deleteGroup: deleteGroup,
         adjustMobile: adjustMobile,
         asideImgHover: asideImgHover,
         wxDisplay: wxDisplay
@@ -306,7 +332,7 @@ var group = (function ($) {
                     alert("已经存在组：'" + addGroupName + ",'请输入不重复的组名！");
                 }else {
                     //页面插入组元素
-                    var insertHtml = "<div class='groupWrap'><div class='group'><span class='groupName'>" + addGroupName + "</span><span class='glyphicon glyphicon-plus addGroupBtn' aria-hidden='true'></span></div>" +
+                    var insertHtml = "<div class='groupWrap'><div class='group'><span class='groupName'>" + addGroupName + "<button type='button' class='close'><span aria-hidden='true'>×</span> </button> </span><span class='glyphicon glyphicon-plus addGroupBtn' aria-hidden='true'></span></div>" +
                         "<div class='links addNewLinks'><span class='glyphicon glyphicon-plus' aria-hidden='true'></span><a href='javascript:;'><span class='linkName'>添加新链接</span></a></div></div>";
                     
                     $("#addNewGroupPopup").modal("hide");
@@ -322,6 +348,7 @@ var group = (function ($) {
                     //TODO: 保存新组数据到数据库
                     db.add("links",{group:addGroupName},{group:addGroupName},function () {
                         $(".contentwrap").append(insertHtml);
+                        window.location.reload();
                     });
                 }
             }else {
@@ -417,9 +444,10 @@ var links = (function ($) {
                 });
 
                 //TODO: 存到数据库，读取用户信息，存到对应的数据库表
-                var groupName = $(".addNewLinks[index=" + (index-1) +"]").siblings(".group").text().trim();
+                var groupName = $(".addNewLinks[index=" + (index-1) +"]").siblings(".group").children(".groupName").text().trim().split("\n")[0];
                 db.add("links",{group:groupName,linkName:name},{group:groupName,linkName:name,url:url},function () {
                     $(".groupWrap:nth-child(" + index + ") .links:last").before(insertHtml);
+                    window.location.reload();
                 });
             }else {
                 if(!name)$("#addNewLinkPopup .addNewLinksName").addClass("alert-danger");
@@ -449,6 +477,7 @@ var links = (function ($) {
     //page
     page.linkModify();
     page.updateGroup();
+    page.deleteGroup();
     page.adjustMobile();
     page.asideImgHover();
     page.wxDisplay();

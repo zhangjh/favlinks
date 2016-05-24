@@ -45,7 +45,12 @@
             %>
                     <div class="groupWrap">
                         <div class="group">
-                            <span class="groupName"><%= group %></span>
+                            <span class="groupName">
+                                <%= group %>
+                                <button type="button" class="close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </span>
                             <span class="glyphicon glyphicon-plus addGroupBtn" aria-hidden="true"></span>
                         </div>
             <%

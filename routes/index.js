@@ -61,9 +61,7 @@ routes.add = function (mongoose) {
             if(!data){
                 res.json({status:1,msg:"Error: no data given."});
             }
-            console.log(findPattern);
             mongoose.find(collection,findPattern,function (resu) {
-                console.log(resu);
                 if(!resu.length){
                     //当前没有则插入
                     mongoose.insert(collection,data,function (ret) {
@@ -87,9 +85,7 @@ routes.update = function (mongoose) {
           user = req.query.user;
         if(validUserCheck(req,user)){
             findPattern.user = user;
-            console.log(findPattern);
             mongoose.find(collection,findPattern,function (resu) {
-                console.log(resu);
                 if(!resu.length){
                     res.json({status:1,msg:"Error: no data to update."});
                 }else {

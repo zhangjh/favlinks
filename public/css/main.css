@@ -288,3 +288,13 @@ aside .row a:hover {
   right: 5px;
   opacity: 1;
 }
+
+.group .close {
+  display: none;
+}
+
+.group .close > span {
+  color: red;
+  /*font-size: 1.1em;*/
+  margin: 5px;
+}

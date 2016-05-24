@@ -49,6 +49,8 @@ $("#loginBtn").on("click",function () {
             document.cookie = "user=" + user + ";expires=" + expires.toGMTString();
             document.cookie = "isLogin=true";
             window.location.reload();
+        }else {
+            alert(ret.msg);
         }
     });
 });
