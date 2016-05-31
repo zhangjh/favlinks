@@ -50,7 +50,8 @@ $("#loginBtn").on("click",function () {
             document.cookie = "isLogin=true";
             window.location.reload();
         }else {
-            alert(ret.msg);
+            // alert(ret.msg);
+            notie.alert(3,ret.msg,3);
         }
     });
 });
@@ -71,11 +72,10 @@ $("#signupBtn").on("click",function () {
                 expires.setTime(expires.getTime() + 14*24*60*60*1000);
                 document.cookie = "user=" + encodeURIComponent(user) + ";expires=" + expires.toGMTString();
                 document.cookie = "isLogin=true";
-                // alert(ret.msg);
                 $("#loginTips").modal("show");
                 window.location.reload();
             }else {
-                alert("注册失败：" + ret.msg);
+                notie.alert(3,"注册失败：" + ret.msg,3);
             }
         });
     }
@@ -85,14 +85,14 @@ $("#forgetPasswd").on("click",function () {
     var user = $("#loginPannel .userName").val(),
         email = $("#loginPannel .email").val();
     if(!user || !email){
-        alert("请填写用户名和注册邮箱！");
+        notie.alert(2,"请填写用户名和注册邮箱！",3);
     }else {
         $.ajax({
             url: "/forget",
             type: "POST",
             data: {user: user,email: email}
         }).done(function (ret) {
-            alert(ret.msg);
+            notie.alert(4,ret.msg,3);
         });
     }
 });
