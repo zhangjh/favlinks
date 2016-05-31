@@ -487,4 +487,7 @@ var links = (function ($) {
     page.adjustMobile();
     page.asideImgHover();
     page.wxDisplay();
+
+    //goTop
+    common.goTop();
 })();

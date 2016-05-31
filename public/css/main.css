@@ -298,3 +298,7 @@ aside .row a:hover {
   /*font-size: 1.1em;*/
   margin: 5px;
 }
+
+.social-share {
+  text-align: right;
+}
