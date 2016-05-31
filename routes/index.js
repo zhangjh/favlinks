@@ -41,6 +41,10 @@ routes.index = function(mongoose){
                     groups.push(group);
                 }
             }
+            if(groups.length == 0){
+                //没有内容时为了可以新增，保留一个默认组
+                groups.push("默认");
+            }
             res.render("index_min",{
                 title: "favlinks--您的私人收藏夹",ret: ret,groups: groups   
             });

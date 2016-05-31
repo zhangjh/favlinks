@@ -30,7 +30,7 @@ var common = (function ($) {
             if(ret.status == 0){
                 if(fn)fn();
             }
-            if(ret.status != "0")alert(ret.msg);
+            if(ret.status != "0")notie.alert(3,ret.msg,3);
         });
     };
 
@@ -84,6 +84,11 @@ var common = (function ($) {
         return false;
     };
 
+    //非通用trim，只是用来获取组名，去除删除按钮的x字符
+    var strTrim = function (ori) {
+        return ori.split('×')[0].trim();
+    };
+
     return {
         getCookie: getCookie,
         Listener: Listener,
@@ -92,7 +97,8 @@ var common = (function ($) {
         validCheck: validCheck,
         goTop: goTop,
         goBottom: goBottom,
-        isMobile: isMobile
+        isMobile: isMobile,
+        strTrim: strTrim
     };
 })(jQuery);
 
@@ -158,7 +164,7 @@ var page = (function ($) {
                         if(name)updateCondition.linkName = name;
                         if(url)updateCondition.url = url;
                         //更新数据库
-                        db.update("links",{group:$(that).parent().siblings(".group").children(".groupName").text().trim().split("\n")[0],linkName:$(that).prev().text().trim()},updateCondition,function () {
+                        db.update("links",{group:common.strTrim($(that).parent().siblings(".group").children(".groupName").text()),linkName:$(that).prev().text().trim()},updateCondition,function () {
                             $("#updatePannel").modal("hide");
                             if(name)$(that).prev().children("span.linkName").text(name);
                             if(url)$(that).prev().attr("href",url);
@@ -191,7 +197,7 @@ var page = (function ($) {
                 return;
             }else {
                 var that = $(this);
-                var oriGroup = $(this).text();
+                var oriGroup = common.strTrim($(this).text());
                 $("#updateGroupPannel").modal("show");
                 $("#updateGroupBtn").click(function () {
                     var newGroup = $(".newGroup").val();
@@ -222,7 +228,7 @@ var page = (function ($) {
                 notie.alert(2,"请先登录！",2);
                 return;
             }
-            var groupName = $(this).parents(".groupName").text().trim().split("\n")[0];
+            var groupName = common.strTrim($(this).parents(".groupName").text());
             db.remove("links",{},{group:groupName},function () {
                 //删除成功后移除该组
                 $(e.target).parents(".groupWrap").remove();
@@ -444,7 +450,7 @@ var links = (function ($) {
                 });
 
                 //TODO: 存到数据库，读取用户信息，存到对应的数据库表
-                var groupName = $(".addNewLinks[index=" + (index-1) +"]").siblings(".group").children(".groupName").text().trim().split("\n")[0];
+                var groupName = common.strTrim($(".addNewLinks[index=" + (index-1) +"]").siblings(".group").children(".groupName").text());
                 db.add("links",{group:groupName,linkName:name},{group:groupName,linkName:name,url:url},function () {
                     $(".groupWrap:nth-child(" + index + ") .links:last").before(insertHtml);
                     window.location.reload();
