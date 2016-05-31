@@ -141,7 +141,7 @@ var page = (function ($) {
 
             $("#update").click(function () {
                 if(!login.isLogin()){
-                    alert("请先登录！");
+                    notie.alert(2,"请先登录！",2);
                     return;
                 }
                 $("#updatePannel").modal("show");
@@ -153,7 +153,7 @@ var page = (function ($) {
                         url = "//" + url;
                     }
                     if(!name && !url){
-                        alert("请至少填写一项修改.");
+                        notie.alert(2,"请至少填写一项修改.",2);
                     }else {
                         if(name)updateCondition.linkName = name;
                         if(url)updateCondition.url = url;
@@ -171,7 +171,7 @@ var page = (function ($) {
 
             $("#remove").click(function () {
                 if(!login.isLogin()){
-                    alert("请先登录！");
+                    notie.alert(2,"请先登录！",2);
                     return;
                 }else {
                     //TODO: 数据库删除数据
@@ -187,7 +187,7 @@ var page = (function ($) {
     var updateGroup = function () {
         $(".groupName").click(function () {
             if(!login.isLogin()){
-                alert("请先登录！");
+                notie.alert(2,"请先登录！",2);
                 return;
             }else {
                 var that = $(this);
@@ -202,7 +202,7 @@ var page = (function ($) {
                             if(newGroup)that.text(newGroup);
                         });
                     }else {
-                        alert("请填写组名！");
+                        notie.alert(2,"请填写组名！",2);
                     }
                 });
             }
@@ -219,7 +219,7 @@ var page = (function ($) {
         $(".group .close").click(function (e) {
             e.stopPropagation();
             if(!login.isLogin()){
-                alert("请先登录！");
+                notie.alert(2,"请先登录！",2);
                 return;
             }
             var groupName = $(this).parents(".groupName").text().trim().split("\n")[0];
@@ -312,7 +312,7 @@ var group = (function ($) {
         //保存新添加组
         common.Listener(".saveGroupBtn","click",function () {
             if(!login.isLogin()){
-                alert("请先登录！");
+                notie.alert(2,"请先登录！",2);
                 return;
             }
             var addGroupName = $("#addNewGroupPopup input").val(),
@@ -329,7 +329,7 @@ var group = (function ($) {
                     }
                 }
                 if(duplicate){
-                    alert("已经存在组：'" + addGroupName + ",'请输入不重复的组名！");
+                    notie.alert(3,"已经存在组：'" + addGroupName + ",'请输入不重复的组名！",2);
                 }else {
                     //页面插入组元素
                     var insertHtml = "<div class='groupWrap'><div class='group'><span class='groupName'>" + addGroupName + "<button type='button' class='close'><span aria-hidden='true'>×</span> </button> </span><span class='glyphicon glyphicon-plus addGroupBtn' aria-hidden='true'></span></div>" +
@@ -352,7 +352,7 @@ var group = (function ($) {
                     });
                 }
             }else {
-                alert("请输入组名！");
+                notie.alert(2,"请输入组名！",2);
             }
         });
     };
@@ -412,7 +412,7 @@ var links = (function ($) {
         //保存新链接
         common.Listener(".saveLinkBtn","click",function () {
             if(!login.isLogin()){
-                alert("请先登录！");
+                notie.alert(2,"请先登录！",2);
                 return;
             }
             var name = $("#addNewLinkPopup .addNewLinksName").val(),
