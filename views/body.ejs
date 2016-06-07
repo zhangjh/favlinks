@@ -27,8 +27,8 @@
 
                     <ul class="nav navbar-nav navbar-right collapse navbar-collapse" id="userinfo">
                         <li><a href="javascript:;">您好，<span id="loginUser">游客</span></a></li>
-                        <li><a href="#" id="login">登录</a></li>
-                        <li><a href="/logout" id="logout">退出</a></li>
+                        <li><a href="#" id="login" domdot="login">登录</a></li>
+                        <li><a href="/logout" id="logout" domdot="logout">退出</a></li>
                     </ul>
                 </div>
             </nav>
@@ -79,7 +79,7 @@
                         <div class="links addNewLinks" index="<%= i %>">
                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                             <a href="javascript:;">
-                                <span style="" class="linkName">添加新链接</span>
+                                <span style="" class="linkName" domdot="addLink">添加新链接</span>
                             </a>
                         </div>
                     </div>
@@ -95,14 +95,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="addGroup-title">添加新组</h4>
+                <h4 class="modal-title" id="addGroup-title" domdot="addGroup">添加新组</h4>
             </div>
             <div class="modal-body">
                 <input type="text" class="form-control addNewLinksName" placeholder="输入组名">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary saveGroupBtn">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" domdot="cancelGroup">取消</button>
+                <button type="button" class="btn btn-primary saveGroupBtn" domdot="saveGroup">保存</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -120,8 +120,8 @@
                 <input type="text" class="form-control addNewLinksUrl" placeholder="输入网址">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary saveLinkBtn">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" domdot="cancelLink">取消</button>
+                <button type="button" class="btn btn-primary saveLinkBtn" domdot="saveLink">保存</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -142,17 +142,17 @@
                 <input type="text" class="form-control email" placeholder="邮箱">
             </div>
             <div class="modal-footer" style="margin: 0 auto;text-align: center;">
-                <button type="button" class="btn btn-primary" id="signupBtn" disabled>注册</button>
-                <button type="button" class="btn btn-primary" id="loginBtn" disabled>登录</button>
-                <a href="javascript:;" id="forgetPasswd">忘记密码？</a>
+                <button type="button" class="btn btn-primary" id="signupBtn" disabled domdot="signup">注册</button>
+                <button type="button" class="btn btn-primary" id="loginBtn" disabled domdot="signup">登录</button>
+                <a href="javascript:;" id="forgetPasswd" domdot="forget">忘记密码？</a>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
 <div id="change">
-    <div id="update">修改</div>
-    <div id="remove">删除</div>
+    <div id="update" domdot="modify">修改</div>
+    <div id="remove" domdot="delete">删除</div>
 </div>
 
 <div class="modal fade" id="updatePannel" role="dialog" aria-labelledby="update-title">
@@ -167,8 +167,8 @@
                 <input type="text" class="form-control url" placeholder="链接地址">
             </div>
             <div class="modal-footer" style="margin: 0 auto;text-align: center;">
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" id="updateBtn">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" domdot="cancelModify">取消</button>
+                <button type="button" class="btn btn-primary" id="updateBtn" domdot="saveModify">确定</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -185,8 +185,8 @@
                 <input type="text" class="form-control newGroup" placeholder="新的组名">
             </div>
             <div class="modal-footer" style="margin: 0 auto;text-align: center;">
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" id="updateGroupBtn">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" domdot="saveModifyGroup">取消</button>
+                <button type="button" class="btn btn-primary" id="updateGroupBtn" domdot="saveModifyGroup">确定</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -204,15 +204,15 @@
                 <p>您可以后续修改</p>
             </div>
             <div class="modal-footer" style="margin: 0 auto;text-align: center;">
-                <button type="button" class="btn btn-default" id="cancelTipsBtn" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" id="loginTipsBtn">确定</button>
+                <button type="button" class="btn btn-default" id="cancelTipsBtn" data-dismiss="modal" domdot="removeDefault">取消</button>
+                <button type="button" class="btn btn-primary" id="loginTipsBtn" domdot="keepDefault">确定</button>
             </div>
         </div><!-- /.modal-content -->
     </div>
 </div>
 
 <!--<div class="social-share" data-disabled="google,twitter,facebook,diandian,linkedin,tencent" data-mobile-sites="weibo,qq,qzone,wechat">-->
-<div class="social-share" data-sites="weibo,qq,wechat,qzone,douban"></div>
+<div class="social-share" data-sites="weibo,qq,wechat,qzone,douban" domdot="share"></div>
 
 </div>
 <a href="javascript:;" id="goTop"></a>

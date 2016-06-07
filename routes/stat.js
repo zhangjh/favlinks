@@ -6,27 +6,21 @@ var stat = {};
 
 stat.insertInfo = function (mongoose) {
     return function (req, res) {
-        var obj = req.query.obj;
-        var ip = obj.ip,
-            addr = obj.addr,
-            timestamp = obj.timestamp,
-            ua = obj.ua,
-            referer = obj.referer,
-            curUrl = obj.curUrl;
-
-        var clientInfo = {
-            timestamp: timestamp,
-            ua: ua,
-            referer: referer,
-            curUrl: curUrl,
-            ip: ip,
-            addr: addr
-        };
+        var clientInfo = req.query.obj;
 
         mongoose.insert("statics",clientInfo,function (ret) {
             res.json({status: 0,msg: ret});
         });
     };
+};
+
+stat.domdot = function (mongoose) {
+    return function (req, res) {
+        var domdotInfo = req.query.obj;
+        mongoose.insert("domdot",domdotInfo,function (ret) {
+            res.json({status: 0,msg:ret});
+        });
+    }
 };
 
 module.exports = stat;

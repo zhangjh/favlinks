@@ -44,6 +44,7 @@ app.post('/signup',users.signup(mongoose));
 app.get('/logout',users.logout());
 app.post('/forget',users.forget(mongoose));
 app.get('/insertInfo',stat.insertInfo(mongoose));
+app.get('/domdot',stat.domdot(mongoose));
 
 
 // catch 404 and forward to error handler

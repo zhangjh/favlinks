@@ -4,6 +4,7 @@
  */
 
 (function ($) {
+    //访问统计信息
     $(document).ready(function () {
         var timestamp = new Date().toLocaleString(),
             ua = navigator.userAgent,
@@ -33,5 +34,32 @@
                 console.error("Insert clientInfo error: " + ret.msg);
             }
         });
+    });
+})(jQuery);
+
+(function ($) {
+    //点击行为统计
+    document.addEventListener("click",function (e) {
+        var type = "";
+        var ua = navigator.userAgent,
+            ip = returnCitySN['cip'];
+        var obj = {};
+        //只对有domdot属性的元素进行打点信息记录
+        if($(e.target).attr("domdot")){
+            type = $(e.target).attr("domdot");
+            obj.ip = ip;
+            obj.ua = ua;
+            obj.type = type;
+            $.ajax({
+                url: "/domdot",
+                data: {obj: obj}
+            }).done(function (ret) {
+                if(ret.status == 0){
+                    //插入成功
+                }else {
+                    console.error("Insert domdot data failed: " + ret.msg);
+                }
+            });
+        }
     });
 })(jQuery);
