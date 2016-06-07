@@ -488,3 +488,11 @@ var links = (function ($) {
     //goTop
     common.goTop();
 })();
+
+//彩蛋
+(function () {
+    console.info("hello 骚年，你都看到这儿来了！");
+    console.info("不介意的话，打个赏吧╥﹏╥...服务器好贵。。");
+    console.info("你也可以给我推荐便宜的租赁主机服务，欢迎通过页面底部的social link联系我哦。");
+    console.info("如果有任何的问题或者建议，都可以通过底部的反馈链接提给我，我会第一时间响应的呢~");
+})();
