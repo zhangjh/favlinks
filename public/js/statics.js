@@ -50,6 +50,7 @@
             obj.ip = ip;
             obj.ua = ua;
             obj.type = type;
+            obj.time = new Date().toLocaleString();
             $.ajax({
                 url: "/domdot",
                 data: {obj: obj}
