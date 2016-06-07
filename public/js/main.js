@@ -374,17 +374,14 @@ var links = (function ($) {
         //链接hover效果
         common.Listener(".links","mouseover",function () {
             $(this).css({
-                boxShadow: "1px 1px 10px 1px lightblue",
-                fontSize: "larger"
+                boxShadow: "1px 1px 10px 1px lightblue"
+                // fontSize: "larger"
             });
             var editBtn = $(this).find(".glyphicon-edit");
             editBtn.show();
         });
         common.Listener(".links","mouseout",function () {
-            $(this).css({
-                boxShadow: "none",
-                fontSize: "normal"
-            });
+            $(this).removeAttr("style");
             var editBtn = $(this).find(".glyphicon-edit");
             editBtn.hide();
         });
