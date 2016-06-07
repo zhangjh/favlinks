@@ -18,6 +18,30 @@ footer p {
   text-align: center;
 }
 
+a.nounderline:link {
+  text-decoration: none;
+  border: 0;
+  cursor: default;
+}
+
+a.nounderline:visited {
+  text-decoration: none;
+  border: 0;
+  cursor: default;
+}
+
+a.nounderline:hover {
+  text-decoration: none;
+  border: 0;
+  cursor: default;
+}
+
+a.nounderline:active {
+  text-decoration: none;
+  border: 0;
+  cursor: default;
+}
+
 .navbar-header {
   margin: 10px;
 }
