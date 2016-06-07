@@ -8,6 +8,7 @@ var session = require('express-session');
 
 var routes = require('./routes/index');
 var users = require('./routes/login');
+var stat = require('./routes/stat');
 
 var mongoose = require("./lib/mongoose");
 
@@ -42,6 +43,7 @@ app.post('/login',users.login(mongoose));
 app.post('/signup',users.signup(mongoose));
 app.get('/logout',users.logout());
 app.post('/forget',users.forget(mongoose));
+app.get('/insertInfo',stat.insertInfo(mongoose));
 
 
 // catch 404 and forward to error handler
