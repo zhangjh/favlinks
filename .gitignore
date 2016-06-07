@@ -2,3 +2,6 @@ node_modules/
 bower_components/
 .idea/
 nohup.out
+*.min.js
+*.min.css
+*_min.ejs
