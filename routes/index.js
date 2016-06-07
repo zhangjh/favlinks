@@ -46,7 +46,7 @@ routes.index = function(mongoose){
                 groups.push("默认");
             }
             res.render("index_min",{
-                title: "favlinks--您的私人收藏夹",ret: ret,groups: groups   
+                title: "favLinks--您的私人收藏夹",ret: ret,groups: groups   
             });
         });
     };
