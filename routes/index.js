@@ -46,7 +46,7 @@ routes.index = function(mongoose){
                 groups.push("默认");
             }
             res.render("index_min",{
-                title: "favLinks--您的私人收藏夹",ret: ret,groups: groups   
+                title: "favLinks--您的私人收藏夹 - 全国唯一支持完全私人定制的网址收藏导航网站",ret: ret,groups: groups
             });
         });
     };
