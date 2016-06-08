@@ -58,6 +58,13 @@ app.use(function(req, res, next) {
 });
 
 // error handlers
+app.use(function (err, req, res, next) {
+  res.status(err.status || 500);
+  res.render('error',{
+    title: "favLinks--您的私人收藏夹 - 完全私人定制的网址收藏导航",
+    type: "error"
+  });
+});
 
 // development error handler
 // will print stacktrace
