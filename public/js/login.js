@@ -71,7 +71,7 @@ $("#signupBtn").on("click",function () {
                 var expires = new Date();
                 expires.setTime(expires.getTime() + 14*24*60*60*1000);
                 document.cookie = "user=" + encodeURIComponent(user) + ";expires=" + expires.toGMTString();
-                document.cookie = "isLogin=true";
+                document.cookie = "isLogin=true;expires=" + expires.toGMTString();
                 $("#loginTips").modal("show");
                 window.location.reload();
             }else {
