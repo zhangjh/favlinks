@@ -11,8 +11,11 @@ var users = require('./routes/login');
 var stat = require('./routes/stat');
 
 var mongoose = require("./lib/mongoose");
+var compression = require('compression');
 
 var app = express();
+//开启gzip压缩
+app.use(compression());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
