@@ -9,6 +9,7 @@ var session = require('express-session');
 var routes = require('./routes/index');
 var users = require('./routes/login');
 var stat = require('./routes/stat');
+var invest = require('./routes/invest');
 
 var mongoose = require("./lib/mongoose");
 var compression = require('compression');
@@ -49,6 +50,14 @@ app.post('/forget',users.forget(mongoose));
 app.get('/insertInfo',stat.insertInfo(mongoose));
 app.get('/domdot',stat.domdot(mongoose));
 
+// 指数定投工具
+app.get('/trade',invest.trade());
+app.get('/investStat',invest.stat(mongoose));
+app.post('/investAdd',invest.add(mongoose));
+app.get('/investSelect',invest.select(mongoose));
+app.get('/investUpdate',invest.update(mongoose));
+app.get('/getSumInfo',invest.getSumInfo(mongoose));
+app.get('/getInput',invest.getInput(mongoose));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

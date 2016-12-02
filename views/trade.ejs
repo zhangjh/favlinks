@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>指数定投交易记录工具</title>
+    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css">
+    <style>
+        .container-fluid {
+            width: 80%;
+            text-align: center;
+        }
+        div p {
+            padding: 10px 40px 0 0 ;
+            min-width: 100px;
+            text-align: right;
+        }
+        .form-control {
+            min-width: 150px;
+            max-width: 200px;
+        }
+        div button {
+            min-width: 50px;
+            margin: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <h1>指数定投交易记录工具</h1>
+        <hr>
+        <div class="row">
+            <div class="col-md-1 col-md-offset-4 col-xs-2 col-xs-offset-2">
+                <p>标的名:</p>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" name="name">
+            </div>
+        </div>
+        <div class="row" >
+            <div class="col-md-1 col-md-offset-4 col-xs-2 col-xs-offset-2">
+                <p>标的代码:</p>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" name="code">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-1 col-md-offset-4 col-xs-2 col-xs-offset-2">
+                <p>交易价:</p>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" name="price">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-1 col-md-offset-4 col-xs-2 col-xs-offset-2">
+                <p>交易量:</p>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" name="sum">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-1 col-md-offset-4 col-xs-2 col-xs-offset-2">
+                <p>市盈率:</p>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" name="rate">
+            </div>
+        </div>
+        <div class="row">
+            <button class="btn btn-primary" disabled id="buy">买入</button>
+            <button class="btn btn-primary" disabled id="sell">卖出</button>
+        </div>
+    </div>
+    <script src="/jquery/dist/jquery.min.js"></script>
+    <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/js/trade.js"></script>
+</body>
+</html>
