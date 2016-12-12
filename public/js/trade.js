@@ -120,7 +120,7 @@ function buyOrsell(name,code,price,rate,sum,total) {
     var price = $("input[name='price']").val();
     var rate = $("input[name='rate']").val();
     var sum = $("input[name='sum']").val();
-    var total = -(parseFloat(sum) * parseFloat(price));
+    var total = -(parseFloat(sum) * parseFloat(price)).toFixed(2);
     buyOrsell(name,code,price,rate,sum,total);
   });
 
@@ -130,7 +130,7 @@ function buyOrsell(name,code,price,rate,sum,total) {
     var price = $("input[name='price']").val();
     var rate = $("input[name='rate']").val();
     var sum = $("input[name='sum']").val();
-    var total = parseFloat(sum) * parseFloat(price);
+    var total = (parseFloat(sum) * parseFloat(price)).toFixed(2);
     buyOrsell(name,code,price,rate,sum,total);
   });
 })(jQuery);
