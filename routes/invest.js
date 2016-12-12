@@ -18,7 +18,6 @@ invest.stat = function (mongoose) {
 
 invest.add = function (mongoose) {
   return function (req, res) {
-    var data = {};
     var timestamp = new Date();
     var date = [timestamp.getFullYear(),timestamp.getMonth() + 1,timestamp.getDate()].join("-");
     console.log(req.body);
