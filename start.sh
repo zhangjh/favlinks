@@ -1,10 +1,14 @@
 #!/bin/bash
 
+if [[ "X$1" == "X" ]];then
+  MODE="false"
+fi
+
 ##1. 查找服务进程杀之
 ps -ef | grep "node" | awk '{print $2}' | grep -v grep | xargs kill
 #
 ##2. 修改数据库地址
-sed -i "s/DEBUG =.*/DEBUG = ${1};/" lib/mongoose.js
+sed -i "s/DEBUG =.*/DEBUG = ${MODE};/" lib/mongoose.js
 #
 ##3. gulp压缩
 gulp
