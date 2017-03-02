@@ -3,8 +3,10 @@
  */
 
 var inputEles = (function () {
-  var nameEle = $("input[name='name']");
-  var codeEle = $("input[name='code']");
+  // var nameEle = $("input[name='name']");
+  var nameEle = $("#name option:selected");
+  // var codeEle = $("input[name='code']");
+  var codeEle = $("#code option:selected");
   var priceEle = $("input[name='price']");
   var sumEle = $("input[name='sum']");
   var rateEle = $("input[name='rate']");
@@ -113,6 +115,12 @@ function buyOrsell(name,code,price,rate,sum,total) {
 
 (function ($) {
   inputCheck();
+
+  //标的选择联动
+  $("#name").on("change",function (e) {
+    var name = $(e.target).val();
+    $("#code").find("option:contains(" + name + ")").attr("selected","selected");
+  });
 
   $("#sell").on("click",function () {
     var name = $("input[name='name']").val();
