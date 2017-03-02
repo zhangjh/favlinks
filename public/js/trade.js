@@ -93,8 +93,8 @@ function buyOrsell(name,code,price,rate,sum,total) {
       }
     }).done(function (ret) {
       resolve(ret.status);
-    }).fail(function () {
-      reject("write investInput failed");
+    }).fail(function (ret) {
+      reject("write investInput failed:" + ret);
     });
   }));
 
@@ -123,8 +123,8 @@ function buyOrsell(name,code,price,rate,sum,total) {
   });
 
   $("#sell").on("click",function () {
-    var name = $("input[name='name']").val();
-    var code = $("input[name='code']").val();
+    var name = $("#name option:selected").val();
+    var code = $("#code option:selected").val();
     var price = $("input[name='price']").val();
     var rate = $("input[name='rate']").val();
     var sum = $("input[name='sum']").val();
@@ -133,8 +133,8 @@ function buyOrsell(name,code,price,rate,sum,total) {
   });
 
   $("#buy").on("click",function () {
-    var name = $("input[name='name']").val();
-    var code = $("input[name='code']").val();
+    var name = $("#name option:selected").val();
+    var code = $("#code option:selected").val();
     var price = $("input[name='price']").val();
     var rate = $("input[name='rate']").val();
     var sum = $("input[name='sum']").val();
