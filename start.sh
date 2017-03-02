@@ -1,5 +1,6 @@
 #!/bin/bash
 
+MODE=$1
 if [[ "X$1" == "X" ]];then
   MODE="false"
 fi
