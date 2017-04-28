@@ -20,3 +20,6 @@ fi
 #
 #4. 重启服务
 nohup node ./bin/www &
+
+#5. iptables端口转发
+sudo /sbin/iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 3000
