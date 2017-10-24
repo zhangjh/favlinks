@@ -28,7 +28,8 @@ var common = (function ($) {
       data: {collection: collection, findPattern: findPattern, data: data, user: user}
     }).done(function (ret) {
       if (ret.status == 0) {
-        if (fn) fn(ret);
+        console.log(ret.data);
+        if (fn) fn(ret.data);
       }
       if (ret.status != "0") notie.alert(3, ret.msg, 3);
     });
