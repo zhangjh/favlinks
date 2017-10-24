@@ -28,7 +28,7 @@ var common = (function ($) {
       data: {collection: collection, findPattern: findPattern, data: data, user: user}
     }).done(function (ret) {
       if (ret.status == 0) {
-        if (fn) fn();
+        if (fn) fn(ret);
       }
       if (ret.status != "0") notie.alert(3, ret.msg, 3);
     });
