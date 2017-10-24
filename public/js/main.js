@@ -112,11 +112,15 @@ var db = (function () {
   var remove = function (collection, findPattern, data, fn) {
     common.dbOperation("/remove", collection, findPattern, data, fn)
   };
+  var find = function (collection, findPattern, fn) {
+    common.dbOperation("/select", collection, findPattern, {}, fn)
+  };
 
   return {
     add: add,
     update: update,
-    remove: remove
+    remove: remove,
+    find: find
   };
 })();
 
@@ -190,7 +194,7 @@ var page = (function ($) {
           notie.alert(2, "请先登录！", 2);
           return;
         } else {
-          //TODO: 数据库删除数据
+          //数据库删除数据
           db.remove("links", {}, {linkName: $(this).parent().attr("linkName")}, function () {
             $("#change").hide();
             $(that).parents(".links").remove();
@@ -213,7 +217,7 @@ var page = (function ($) {
           var newGroup = $(".newGroup").val();
           if (newGroup) {
             $("#updateGroupPannel").modal("hide");
-            //TODO：更新数据库
+            // 更新数据库
             db.update("links", {group: oriGroup}, {group: newGroup}, function () {
               if (newGroup) that.text(newGroup);
             });
@@ -361,7 +365,7 @@ var group = (function ($) {
           common.Listener(".addGroupBtn", "mouseout");
           common.Listener(".addGroupBtn", "click");
 
-          //TODO: 保存新组数据到数据库
+          // 保存新组数据到数据库
           db.add("links", {group: addGroupName}, {group: addGroupName}, function () {
             $(".contentwrap").append(insertHtml);
             window.location.reload();
@@ -456,7 +460,7 @@ var links = (function ($) {
           editBtn.hide();
         });
 
-        //TODO: 存到数据库，读取用户信息，存到对应的数据库表
+        // 存到数据库，读取用户信息，存到对应的数据库表
         var groupName = common.strTrim($(".addNewLinks[index=" + (index - 1) + "]").siblings(".group").children(".groupName").text());
         db.add("links", {group: groupName, linkName: name}, {group: groupName, linkName: name, url: url}, function () {
           $(".groupWrap:nth-child(" + index + ") .links:last").before(insertHtml);
