@@ -140,6 +140,13 @@ var page = (function ($) {
       if ($("#change").css("display") == "none") {
         $(this).parents(".links").unbind("mouseout");
         common.displayChange($(this), "block");
+        //  信息回填
+        db.find("links",{
+          group: common.strTrim($(that).parent().siblings(".group").children(".groupName").text()),
+          linkName: $(that).prev().text().trim()
+        },function (ret) {
+          console.log(ret);
+        });
       } else {
         $(this).parents(".link").bind("mouseout");
         common.displayChange($(this), "none");
@@ -155,13 +162,7 @@ var page = (function ($) {
           var name = $("#updatePannel .link").val(),
             url = $("#updatePannel .url").val();
           var updateCondition = {};
-          console.log($(this).parent().attr("linkname"));
-          db.find("links",{
-            group: common.strTrim($(that).parent().siblings(".group").children(".groupName").text()),
-            linkName: $(that).prev().text().trim()
-          },function (ret) {
-            console.log(ret);
-          });
+
           if (url && !/^http/.test(url)) {
             url = "//" + url;
           }
