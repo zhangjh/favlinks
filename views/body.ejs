@@ -59,9 +59,10 @@
                         for(var j in ret){
                             var subGroup = ret[j].group,
                             linkName = ret[j].linkName,
+                            url = ret[j].url;
+                            /*
                             url = ret[j].url.split(/(ftp|https?):\/\//);
                             url = url[url.length - 1];
-                            /*
                             if(!/^http/.test(url)){
                                 url = "//" + url;
                             }*/
