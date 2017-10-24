@@ -61,9 +61,10 @@
                             linkName = ret[j].linkName,
                             url = ret[j].url.split(/(ftp|https?):\/\//);
                             url = url[url.length - 1];
+                            /*
                             if(!/^http/.test(url)){
                                 url = "//" + url;
-                            }
+                            }*/
                             if(subGroup == group){
                                 if(linkName){
                         %>
