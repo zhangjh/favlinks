@@ -150,7 +150,11 @@ var page = (function ($) {
           group: common.strTrim($(that).parent().siblings(".group").children(".groupName").text()),
           linkName: $(that).prev().text().trim()
         },function (ret) {
-          console.log(ret);
+          var data = ret[0];
+          var url = data.url;
+          var linkName = data.linkName;
+          $(".modal-body .url").val(url);
+          $(".modal-body .link").val(linkName);
         });
       } else {
         $(this).parents(".link").bind("mouseout");
