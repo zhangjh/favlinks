@@ -49,6 +49,7 @@ app.get('/logout',users.logout());
 app.post('/forget',users.forget(mongoose));
 app.get('/insertInfo',stat.insertInfo(mongoose));
 app.get('/domdot',stat.domdot(mongoose));
+app.get('/visit',stat.visit(mongoose));
 
 // 指数定投工具
 app.get('/trade',invest.trade());

@@ -23,5 +23,26 @@ stat.domdot = function (mongoose) {
     }
 };
 
+stat.visit = function (mongoose) {
+	return function (req, res) {
+		var url = req.query.url;
+		res.header("Access-Control-Allow-Origin", "zhangjh.me");	
+		mongoose.find("visit",{url: url}, function(ret) {
+			var cnt = 0;
+			if(ret.length){
+				cnt = parseInt(ret[0].cnt);	
+				mongoose.update("visit",{url: url},{cnt: cnt + 1},{},function(ret){
+					//console.log(ret);
+				});
+			}else {
+				mongoose.insert("visit",{url: url,cnt: cnt + 1},function(ret){
+					//console.log(ret);
+				});
+			}
+			res.json({status: 0,cnt: cnt + 1});
+		});
+	};
+};
+
 module.exports = stat;
 
