@@ -484,6 +484,11 @@ var links = (function ($) {
   };
 })(jQuery);
 
+//通知
+var notice = function () {
+  notie.alert(1,"最近HTTPS证书过期了，网站被Chrome标记为不安全，我暂时还没时间处理，请大家放心，站点不是被黑了...另外随着用户变多了，UI有必要美化美化，后面我会升级一下，敬请期待",3);
+};
+
 //Main
 (function () {
   // http => https
