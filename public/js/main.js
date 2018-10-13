@@ -517,7 +517,7 @@ var notice = function () {
   //goTop
   common.goTop();
 
-  notice();
+  // notice();
 })();
 
 //彩蛋
