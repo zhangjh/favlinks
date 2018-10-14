@@ -1,5 +1,7 @@
 var routes = {};
 
+var fs = require('fs');
+
 //更改操作时校验用户合法性
 function validUserCheck(req,user) {
     var sessionUser = req.session.user;
@@ -138,7 +140,7 @@ routes.select = function (mongoose) {
   }
 };
 
-//复制defaul数据给新注册用户
+// 复制defaul数据给新注册用户
 routes.copy = function (mongoose) {
     return function (req, res) {
         var collection = req.query.collection,
@@ -168,4 +170,93 @@ routes.copy = function (mongoose) {
     };
 };
 
+// 导出url记录
+routes.export = function (mongoose) {
+    return function (req, res) {
+        let sessionUser = undefined;
+        let cookieUser = undefined;
+        let findPattern = {};
+
+        let cookie = req.headers.cookie || "";
+
+        for(let item of cookie.split(";")){
+            if(/user/.test(item)){
+                cookieUser = decodeURIComponent(item.split("=")[1]);
+                break;
+            }
+        }
+
+        if(req.session && req.session.user){
+            sessionUser = req.session.user;
+        }
+
+		console.log("cookie: " + cookie);
+		console.log("cookieUser: " + cookieUser);
+		console.log("sessionUser: " + sessionUser);
+
+        //防止伪造cookie登录
+        if(cookieUser && sessionUser && cookieUser === sessionUser){
+            findPattern = {user: sessionUser};
+            mongoose.find("links",findPattern,resu => {
+                // 拼装xml格式书签供下载
+                let head =
+                    `<!DOCTYPE NETSCAPE-Bookmark-file-1>
+                    <!-- This is an automatically generated file.
+                     It will be read and overwritten.
+                     DO NOT EDIT! -->
+                    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+                    <TITLE>藏经阁导出书签</TITLE>
+                    <H1><a href="https://favlink.cn">藏经阁</a>导出书签</H1>`;
+                let html =
+                    head + `
+                        <DL><p>
+                    `;
+
+                let groups = [];
+                resu.map(item => {
+                    if(groups.indexOf(item.group) === -1){
+                        groups.push(item.group);
+                    }
+                });
+
+                groups.map(group => {
+                    let groupEle = `
+                            <DT><H3>${group}</H3>
+                            <DL><p>
+                            `;
+                    let contentEle = "";
+                    resu.map(item => {
+                        if(item.group === group && item.url && item.linkName){
+                            contentEle += `
+                               <DT><A HREF="${item.url}">${item.linkName}</A>`;
+                        }
+                    });
+                    html += groupEle + contentEle + `
+                        </DL><p>`;
+                });
+                html += `
+                    </DL><p>`;
+
+                if(html){
+                    let filePath = 'public/export/' + sessionUser + "_导出.html";
+                    fs.writeFile(process.cwd() + "/" + filePath,html,function (err) {
+                        if(err){
+                            res.json({status: 1,msg: err});
+                        }else {
+                            res.download(filePath);
+                        }
+                    });
+                }else {
+                    res.json({status: 1,msg: "导出失败，内容为空"});
+                }
+            });
+        }else {
+            res.clearCookie("user",{});
+            res.cookie("isLogin","false");
+            res.json({status: 1,msg: "Access Denied！请检查是否登录."});
+        }
+    }
+};
+
 module.exports = routes;
+

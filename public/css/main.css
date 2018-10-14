@@ -289,11 +289,15 @@ aside .row a:hover {
 
 #wx_img_wrapper {
   display: none;
-  position: absolute;
-  left: 40%;
-  /*margin-left: 90px;*/
-  top: 50%;
-  z-index: 10000;
+  position: fixed;
+  width: 190px;
+  height: 220px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  top: 0px;
+  margin: auto;
+  z-index: 999;
 }
 
 #wx_img_wrapper img {
@@ -325,4 +329,13 @@ aside .row a:hover {
 
 .social-share {
   text-align: right;
+}
+
+#export {
+  font-size: 1.1em;
+  width: 80px;
+  text-align: center;
+  cursor: pointer;
+  background: #F8F8F8;
+  padding: 5px;
 }

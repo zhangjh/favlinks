@@ -3,6 +3,9 @@
  */
 
 var common = (function ($) {
+  // 全局的debug开关
+  var debug = false;
+
   //返回指定key的cookie值
   var getCookie = function (key) {
     var cookie = document.cookie || "";
@@ -91,6 +94,7 @@ var common = (function ($) {
   };
 
   return {
+    debug: debug,
     getCookie: getCookie,
     Listener: Listener,
     dbOperation: dbOperation,
@@ -491,9 +495,11 @@ var notice = function () {
 
 //Main
 (function () {
-  // http => https
-  if (window.location.protocol === "http:") {
-    window.location.href = "https://favlink.cn";
+  // http => https, debug模式关闭
+  if(!common.debug){
+      if (window.location.protocol === "http:") {
+          window.location.href = "https://favlink.cn";
+      }
   }
 
   //login
@@ -527,3 +533,4 @@ var notice = function () {
   console.info("你也可以给我推荐便宜的租赁主机服务，欢迎通过页面底部的social link联系我哦。");
   console.info("如果有任何的问题或者建议，都可以通过底部的反馈链接提给我，我会第一时间响应的呢~");
 })();
+
