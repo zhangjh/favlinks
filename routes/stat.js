@@ -26,7 +26,10 @@ stat.domdot = function (mongoose) {
 stat.visit = function (mongoose) {
 	return function (req, res) {
 		var url = req.query.url;
-		res.header("Access-Control-Allow-Origin", "http://zhangjh.me");	
+		var origin = req.headers.origin;
+		if(/zhangjh.me/.test(origin)){
+			res.header("Access-Control-Allow-Origin", origin);	
+		}
 		mongoose.find("visit",{url: url}, function(ret) {
 			var cnt = 0;
 			if(ret.length){
