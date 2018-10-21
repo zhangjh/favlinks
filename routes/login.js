@@ -13,8 +13,8 @@ function sendMail(to,content) {
         secureConnection: true,
         port: 465,
         auth: {
-            user: "xxxxx",
-            pass: "xxxxx"
+            user: "favlinks@126.com",
+            pass: "qazxsw11111"
         }
     });
 
