@@ -5,3 +5,4 @@ nohup.out
 *.min.js
 *.min.css
 *_min.ejs
+*.log
