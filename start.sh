@@ -8,8 +8,10 @@ fi
 ##1. 查找服务进程杀之
 ps -ef | grep "node" | awk '{print $2}' | grep -v grep | xargs kill
 #
-##2. 修改数据库地址
+##2. 本地化
 sed -i "s/DEBUG =.*/DEBUG = ${MODE};/" lib/mongoose.js
+
+cp login.js ./routes/
 #
 ##3. gulp压缩
 gulp
