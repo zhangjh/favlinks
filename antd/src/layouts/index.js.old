@@ -1,0 +1,27 @@
+import styles from './index.css';
+import { Layout } from 'antd';
+const { Header, Content, Sider, Footer} = Layout;
+
+export default function(props) {
+    return (
+        <Layout>
+            <Header>
+                { props.header }
+            </Header>
+            <Layout>
+                <Content>
+                    { props.content }
+                </Content>
+                <Sider>
+                    { props.leftSider }
+                </Sider>
+                <Sider>
+                    { props.rightSider }
+                </Sider>
+            </Layout>
+            <Footer>
+                    { props.footer }
+            </Footer>
+        </Layout>
+    );
+};
