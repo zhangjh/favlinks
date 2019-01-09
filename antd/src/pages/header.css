@@ -1,0 +1,9 @@
+#loginUser {
+    font-weight: 700;
+    color: black;
+}
+
+.loginSpan {
+    display: inline-block;
+    margin: 0 10px;
+}
