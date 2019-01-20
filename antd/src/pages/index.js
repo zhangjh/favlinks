@@ -1,5 +1,6 @@
 import Header from './header.js';
-import 'antd/dist/antd.css';
+//import 'antd/dist/antd.css';
+import { DatePicker } from 'antd';
 import styles from './index.css';
 import connect from 'dva';
 

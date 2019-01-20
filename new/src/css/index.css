@@ -1,3 +1,45 @@
-@import 'antd/dist/antd.css';
+@import './global.css';
 
+.logoContainer {
+    /*width: 50%;*/
+    /*float: left;*/
+}
 
+.loginContainer {
+    /*width: 50%;*/
+    /*float: right;*/
+    height: 116px;
+    line-height: 116px;
+}
+
+.clear {
+    clear: both;
+}
+
+.logoImg {
+    width: 80px;
+    vertical-align: baseline;
+}
+
+.titleContainer {
+    display: inline-block;
+}
+
+.title {
+    font-family: 'sxdx';
+    font-size: 28px;
+    font-weight: 600;
+    margin: 10px;
+    height: 50px;
+    line-height: 50px;
+}
+
+.subTitle {
+    font-family: 'fzLongZhao';
+    font-size: 26px;
+    height: 20px;
+    line-height: 20px;
+    text-align: right;
+    margin-right: 40px;
+    letter-spacing: 8px;
+}
