@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-	"font": "font-spider ../public/new/index.html",
+    "font": "font-spider ../public/new/index.html",
     "build": "webpack --mode production",
     "start": "webpack-dev-server --open --mode development",
     "dev": "webpack --mode development"
@@ -48,6 +48,7 @@
   },
   "homepage": "https://gitlab.com/zhangjh/favLinks#README",
   "devDependencies": {
+    "react-responsive": "^6.0.1",
     "webpack-cli": "^3.2.1"
   }
 }
