@@ -36,24 +36,33 @@ function getUser() {
 $("#loginBtn").on("click",function () {
     var user = $(".userName").val();
     var passwd = $(".passwd").val();
-    $.ajax({
-        url: "/login",
-        type: "POST",
-        data: {user:user,passwd:passwd}
-    }).done(function (ret) {
-        if(ret.status == 0){
-            $("#loginUser").text(user);
-            //cookie 14天
-            var expires = new Date();
-            expires.setTime(expires.getTime() + 14*24*60*60*1000);
-            document.cookie = "user=" + encodeURIComponent(user) + ";expires=" + expires.toGMTString();
-            document.cookie = "isLogin=true;expires=" + expires.toGMTString();
-            window.location.reload();
-        }else {
-            // alert(ret.msg);
-            notie.alert(3,ret.msg,3);
-        }
-    });
+	$.ajax({
+		url: "/passwdencrypt",
+		type: "POST",
+		data: {passwd:passwd}
+	}).done(function(ret){
+		if(ret.status == 0) {
+			var encryptPasswd = ret.data;
+			$.ajax({
+				url: "/login",
+				type: "POST",
+				data: {user:user,passwd:encryptPasswd}
+			}).done(function (ret) {
+				if(ret.status == 0){
+					$("#loginUser").text(user);
+					//cookie 14天
+					var expires = new Date();
+					expires.setTime(expires.getTime() + 14*24*60*60*1000);
+					document.cookie = "user=" + encodeURIComponent(user) + ";expires=" + expires.toGMTString();
+					document.cookie = "isLogin=true;expires=" + expires.toGMTString();
+					window.location.reload();
+				}else {
+					// alert(ret.msg);
+					notie.alert(3,ret.msg,3);
+				}
+			});		
+		}
+	});
 });
 
 $("#signupBtn").on("click",function () {

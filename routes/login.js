@@ -3,9 +3,10 @@
  */
 var nodemailer = require('nodemailer');
 var crypto = require("crypto");
+var config = require("../conf/config");
 
 var users = {};
-var secret = "weird sheep";
+var secret = config.secret;
 
 function sendMail(to,content) {
     var transport = nodemailer.createTransport("SMTP",{
@@ -14,7 +15,7 @@ function sendMail(to,content) {
         port: 465,
         auth: {
             user: "favlinks@126.com",
-            pass: "qazxsw11111"
+            pass: config.mailPass
         }
     });
 
@@ -44,6 +45,20 @@ function decrypt(str,secret) {
     return dec;
 }
 
+users.passwdencrypt = function(mongoose) {
+	return function(req,res) {
+		var passwd = req.body.passwd;
+		if(!passwd) {
+			return res.json({status: 1, msg: "密码为空"});
+		}
+		var enc = encrypt(passwd, config.secret);
+		if(!enc) {
+			return res.json({status: 1, msg: "密码为空"});
+		}
+		res.json({status: 0, data: enc});
+	};
+};
+	
 users.login = function (mongoose) {
     return function (req,res) {
         var user = req.body.user,
@@ -52,7 +67,7 @@ users.login = function (mongoose) {
             //判断用户名密码
             //登录成功后写入cookie，seession，跳转
             if(resu.length){
-                if(passwd == decrypt(resu[0].passwd,secret)){
+                if(passwd == resu[0].passwd){
                     //登录成功
                     req.session.user = user;
                     req.session.isLogin = true;
