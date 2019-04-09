@@ -11,7 +11,7 @@ ps -ef | grep "node" | awk '{print $2}' | grep -v grep | xargs kill
 ##2. 本地化
 sed -i "s/DEBUG =.*/DEBUG = ${MODE};/" lib/mongoose.js
 
-cp login.js ./routes/
+#cp login.js ./routes/
 #
 ##3. gulp压缩
 gulp
