@@ -6,7 +6,7 @@ if [[ "X$1" == "X" ]];then
 fi
 
 ##1. 查找服务进程杀之
-ps -ef | grep "node" | awk '{print $2}' | grep -v grep | xargs kill
+ps -ef | grep "node" | grep "favlinks" | awk '{print $2}' | grep -v grep | xargs kill
 #
 ##2. 本地化
 sed -i "s/DEBUG =.*/DEBUG = ${MODE};/" lib/mongoose.js
@@ -21,7 +21,7 @@ if [ $? -ne 0 ];then
 fi
 #
 #4. 重启服务
-nohup node ./bin/www &
+nohup node ../favlinks/bin/www &> favlinks.log &
 
 #5. iptables端口转发
 #sudo /sbin/iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 3000
