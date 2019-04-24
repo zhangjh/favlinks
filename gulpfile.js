@@ -18,7 +18,7 @@ gulp.task("clean",function() {
 
 gulp.task('css',["clean"],function(){
     return gulp.src('public/css/*.css')
-        .pipe(plugins.minifyCss({compatibility: 'ie8'}))
+        .pipe(gulpif(!debug, plugins.minifyCss({compatibility: 'ie8'})))
         .pipe(plugins.rename({suffix: '.min'}))
         .pipe(gulp.dest('public/css'));
 });
@@ -36,7 +36,7 @@ gulp.task('js',['clean'],function(){
 
 gulp.task('html',['clean'],function () {
     return gulp.src('views/*.ejs')
-        .pipe(plugins.minifyEjs())
+        .pipe(gulpif(!debug, plugins.minifyEjs()))
         .pipe(plugins.rename({suffix:'_min'}))
         .pipe(gulp.dest('views/'));
 });
