@@ -106,12 +106,20 @@ div.links {
   cursor: pointer;
 }
 
-.addGroupBtn{
+.addGroupBtn, .removeGroupBtn {
   position: absolute;
   top: 5px;
-  right: 10px;
   font-size: 100% !important;
   cursor: pointer;
+}
+
+.addGroupBtn {
+  right: 25px;
+}
+
+.removeGroupBtn {
+  right: 5px;
+  color: indianred !important;
 }
 
 .links {
@@ -331,11 +339,12 @@ aside .row a:hover {
   text-align: right;
 }
 
-#export {
+#export, #addGroup {
   font-size: 1.1em;
   width: 80px;
   text-align: center;
   cursor: pointer;
   background: #F8F8F8;
   padding: 5px;
+  text-decoration: none;
 }

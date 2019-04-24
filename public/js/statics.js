@@ -28,7 +28,7 @@
             data: {obj: obj},
             type: "get"
         }).done(function (ret) {
-            if(ret.status == 0){
+            if(ret.status === 0){
                 // console.log("Insert clientInfo ok.");
             }else {
                 console.error("Insert clientInfo error: " + ret.msg);
@@ -55,7 +55,7 @@
                 url: "/domdot",
                 data: {obj: obj}
             }).done(function (ret) {
-                if(ret.status == 0){
+                if(ret.status === 0){
                     //插入成功
                 }else {
                     console.error("Insert domdot data failed: " + ret.msg);

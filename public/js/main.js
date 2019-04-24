@@ -2,15 +2,14 @@
  * Created by jihong.zjh on 2016/5/19.
  */
 
-var common = (function ($) {
+const common = (function ($) {
   // 全局的debug开关
-  var debug = false;
+  const debug = false;
 
   //返回指定key的cookie值
-  var getCookie = function (key) {
-    var cookie = document.cookie || "";
-    cookie = cookie.split(";");
-    for (var i in cookie) {
+  const getCookie = function (key) {
+    const cookie = (document.cookie || "").split(";");
+    for (let i in cookie) {
       if (new RegExp(key).test(cookie[i])) {
         return decodeURIComponent(cookie[i].split("=")[1]);
       }
@@ -18,36 +17,38 @@ var common = (function ($) {
   };
 
   //事件监听器
-  var Listener = function (ele, ev, fn) {
+  const Listener = function (ele, ev, fn) {
     $(ele).on(ev, fn);
   };
 
   //ajax执行操作增删改查
-  var dbOperation = function (url, collection, findPattern, data, fn) {
-    var user = common.getCookie("user");
+  const dbOperation = function (jsonParam) {
+    const user = common.getCookie("user");
 
     $.ajax({
-      url: url,
-      data: {collection: collection, findPattern: findPattern, data: data, user: user}
+      url: jsonParam.url,
+      data: {collection: jsonParam.collection, findPattern: jsonParam.findPattern, data: jsonParam.data, user: user}
     }).done(function (ret) {
-      if (ret.status == 0) {
+      if (ret.status === 0) {
         console.log(ret.data);
-        if (fn) fn(ret.data);
+        if (jsonParam.fn) {
+          jsonParam.fn(ret.data);
+        }
       }
-      if (ret.status != "0") notie.alert(3, ret.msg, 3);
+      if (ret.status !== "0") notie.alert(3, jsonParam.msg || ret.msg, 3);
     });
   };
 
-  var displayChange = function (editBtn, display) {
-    var l = editBtn.offset().left,
+  const displayChange = function (editBtn, display) {
+    const l = editBtn.offset().left,
       t = editBtn.offset().top;
     $("#change").css({top: t + 30, left: l});
     $("#change").css({display: display});
   };
 
   //检查ele的值是否满足提供的正则检查
-  var validCheck = function (ele, pattern) {
-    var v = $(ele).val();
+  const validCheck = function (ele, pattern) {
+    const v = $(ele).val();
     if (!pattern.test(v)) {
       $(ele).addClass("alert-danger");
     } else {
@@ -55,9 +56,9 @@ var common = (function ($) {
     }
   };
 
-  var goTop = function () {
+  const goTop = function () {
     $(document).scroll(function () {
-      var scrollTop = $(document).scrollTop(),
+      const scrollTop = $(document).scrollTop(),
         headerHeight = $("#header").height();
       if (scrollTop > headerHeight) {
         //滚动距离超过了header，则展示返回顶部按钮
@@ -73,23 +74,21 @@ var common = (function ($) {
     });
   };
 
-  var goBottom = function () {
+  const goBottom = function () {
     $("body").animate({
       scrollTop: document.body.scrollHeight
     }, 1000);
   };
 
-  var isMobile = function () {
-    var w = $(window).width(),
+  const isMobile = function () {
+    const w = $(window).width(),
       h = $(window).height();
-    if (w < h) {
-      return true;
-    }
-    return false;
+
+    return w < h;
   };
 
   //非通用trim，只是用来获取组名，去除删除按钮的x字符
-  var strTrim = function (ori) {
+  const strTrim = function (ori) {
     return ori.split('×')[0].trim();
   };
 
@@ -107,18 +106,46 @@ var common = (function ($) {
   };
 })(jQuery);
 
-var db = (function () {
-  var add = function (collection, findPattern, data, fn) {
-    common.dbOperation("/add", collection, findPattern, data, fn);
+const db = (function () {
+  const add = function (collection, findPattern, data, fn, msg) {
+    common.dbOperation({
+      url: "/add",
+      collection,
+      findPattern,
+      data,
+      fn,
+      msg
+    });
   };
-  var update = function (collection, findPattern, data, fn) {
-    common.dbOperation("/update", collection, findPattern, data, fn);
+  const update = function (collection, findPattern, data, fn, msg) {
+    common.dbOperation({
+      url: "/update",
+      collection,
+      findPattern,
+      data,
+      fn,
+      msg
+    });
   };
-  var remove = function (collection, findPattern, data, fn) {
-    common.dbOperation("/remove", collection, findPattern, data, fn)
+  const remove = function (collection, findPattern, data, fn, msg) {
+    common.dbOperation({
+      url: "/remove",
+      collection,
+      findPattern,
+      data,
+      fn,
+      msg
+    });
   };
-  var find = function (collection, findPattern, fn) {
-    common.dbOperation("/select", collection, findPattern, {}, fn)
+  const find = function (collection, findPattern, fn, msg) {
+    common.dbOperation({
+      url: "/select",
+      collection,
+      findPattern,
+      data,
+      fn,
+      msg
+    });
   };
 
   return {
@@ -130,23 +157,23 @@ var db = (function () {
 })();
 
 //跟页面相关的操作
-var page = (function ($) {
-  var showLoginPannel = function () {
+const page = (function ($) {
+  const showLoginPannel = function () {
     $("#login").on("click", function () {
       $("#loginPannel").modal("show");
     });
   };
 
-  var setUserName = function () {
-    var user = common.getCookie("user");
+  const setUserName = function () {
+    const user = common.getCookie("user");
     $("#loginUser").text(user);
   };
 
-  var linkModify = function () {
+  const linkModify = function () {
     $("span.glyphicon.glyphicon-edit").click(function (e) {
-      var that = e.target;
+      const that = e.target;
       $("#change").attr("linkName", $(this).prev().text().trim());
-      if ($("#change").css("display") == "none") {
+      if ($("#change").css("display") === "none") {
         $(this).parents(".links").unbind("mouseout");
         common.displayChange($(this), "block");
         //  信息回填
@@ -154,9 +181,9 @@ var page = (function ($) {
           group: common.strTrim($(that).parent().siblings(".group").children(".groupName").text()),
           linkName: $(that).prev().text().trim()
         },function (ret) {
-          var data = ret[0];
-          var url = data.url;
-          var linkName = data.linkName;
+          const data = ret[0];
+          const url = data.url;
+          const linkName = data.linkName;
           $(".modal-body .url").val(url);
           $(".modal-body .link").val(linkName);
         });
@@ -172,9 +199,9 @@ var page = (function ($) {
         }
         $("#updatePannel").modal("show");
         $("#updateBtn").click(function () {
-          var name = $("#updatePannel .link").val(),
+          let name = $("#updatePannel .link").val(),
             url = $("#updatePannel .url").val();
-          var updateCondition = {};
+          let updateCondition = {};
 
           if (url && !/^http/.test(url)) {
             url = "//" + url;
@@ -192,7 +219,7 @@ var page = (function ($) {
               $("#updatePannel").modal("hide");
               if (name) $(that).prev().children("span.linkName").text(name);
               if (url) $(that).prev().attr("href", url);
-            });
+            }, "更新成功");
           }
         });
       });
@@ -204,32 +231,36 @@ var page = (function ($) {
           return;
         } else {
           //数据库删除数据
-          db.remove("links", {}, {linkName: $(this).parent().attr("linkName")}, function () {
+          db.remove("links",
+              {},
+              {linkName: $(this).parent().attr("linkName")},
+              function () {
             $("#change").hide();
             $(that).parents(".links").remove();
-          });
+          },
+              "删除成功");
         }
       });
     });
   };
 
-  var updateGroup = function () {
+  const updateGroup = function () {
     $(".groupName").click(function () {
       if (!login.isLogin()) {
         notie.alert(2, "请先登录！", 2);
         return;
       } else {
-        var that = $(this);
-        var oriGroup = common.strTrim($(this).text());
+        const that = $(this);
+        const oriGroup = common.strTrim($(this).text());
         $("#updateGroupPannel").modal("show");
         $("#updateGroupBtn").click(function () {
-          var newGroup = $(".newGroup").val();
+          const newGroup = $(".newGroup").val();
           if (newGroup) {
             $("#updateGroupPannel").modal("hide");
             // 更新数据库
             db.update("links", {group: oriGroup}, {group: newGroup}, function () {
               if (newGroup) that.text(newGroup);
-            });
+            }, "更新成功");
           } else {
             notie.alert(2, "请填写组名！", 2);
           }
@@ -238,37 +269,40 @@ var page = (function ($) {
     });
   };
 
-  var deleteGroup = function () {
+  const deleteGroup = function () {
     $(".groupName").hover(function () {
       $(this).children(".close").show();
     }, function () {
       $(this).children(".close").hide();
     });
 
-    $(".group .close").click(function (e) {
-      e.stopPropagation();
-      if (!login.isLogin()) {
-        notie.alert(2, "请先登录！", 2);
-        return;
-      }
-      var groupName = common.strTrim($(this).parents(".groupName").text());
-      db.remove("links", {}, {group: groupName}, function () {
-        //删除成功后移除该组
-        $(e.target).parents(".groupWrap").remove();
+    $(".removeGroupBtn").click(function (e) {
+      const groupName = common.strTrim($(this).siblings(".groupName").text());
+      $("#deleteGroupBtn").click(function () {
+        if (!login.isLogin()) {
+          notie.alert(2, "请先登录！", 2);
+          return;
+        } else {
+          $("#removeGroupPopup").modal("hide");
+          db.remove("links", {}, {group: groupName}, function () {
+            //删除成功后移除该组
+            $(e.target).parents(".groupWrap").remove();
+          },"删除成功");
+        }
       });
     });
   };
 
-  var adjustMobile = function () {
+  const adjustMobile = function () {
     if (common.isMobile()) {
-      var groupW = $(".groupWrap").width();
-      var w = (groupW - 30) / 2;
+      const groupW = $(".groupWrap").width();
+      const w = (groupW - 30) / 2;
       $(".links").css({width: w});
       $(".addNewLinks > a > span").css({fontSize: "smaller"});
     }
   };
 
-  var asideImgHover = function () {
+  const asideImgHover = function () {
     $("aside .row img").hover(function (e) {
       e.stopPropagation();
       $(this).animate({height: "180px"}, 200, function () {
@@ -279,12 +313,12 @@ var page = (function ($) {
     });
   };
 
-  var wxDisplay = function () {
+  const wxDisplay = function () {
     $(".fa-weixin").click(function () {
       $("#wx_img_wrapper").show();
       $(".content").css({opacity: "0.2"});
       if (common.isMobile()) {
-        var h = $("#wx_img_wrapper").height() - 20;
+        const h = $("#wx_img_wrapper").height() - 20;
         $("#wx_img_wrapper").css({left: "30%"});
         $("body").animate({
           scrollTop: h
@@ -310,10 +344,9 @@ var page = (function ($) {
   };
 })(jQuery);
 
-var login = (function () {
-  var isLogin = function () {
-    if (common.getCookie("isLogin") === "true") return true;
-    else return false;
+const login = (function () {
+  const isLogin = function () {
+    return common.getCookie("isLogin") === "true";
   };
   return {
     "isLogin": isLogin,
@@ -323,16 +356,31 @@ var login = (function () {
 })();
 
 //组相关操作
-var group = (function ($) {
-  var ev = function () {
-    common.Listener(".addGroupBtn", "mouseover", function () {
-      $(this).text("添加新组");
+const group = (function ($) {
+  const ev = function () {
+    // common.Listener(".addGroupBtn", "mouseover", function () {
+    //   $(this).text("添加新组");
+    // });
+    // common.Listener(".addGroupBtn", "mouseout", function () {
+    //   $(this).text("");
+    // });
+    common.Listener("#addGroup", "click", function () {
+      $("#addNewGroupPopup").modal({
+        keyboard: true,
+        show: true
+      });
     });
-    common.Listener(".addGroupBtn", "mouseout", function () {
+
+    common.Listener(".removeGroupBtn", "mouseover", function () {
+      $(this).text("删除该组");
+    });
+
+    common.Listener(".removeGroupBtn", "mouseout", function () {
       $(this).text("");
     });
-    common.Listener(".addGroupBtn", "click", function () {
-      $("#addNewGroupPopup").modal({
+
+    common.Listener(".removeGroupBtn", "click", function () {
+      $("#removeGroupPopup").modal({
         keyboard: true,
         show: true
       });
@@ -344,15 +392,15 @@ var group = (function ($) {
         notie.alert(2, "请先登录！", 2);
         return;
       }
-      var addGroupName = $("#addNewGroupPopup input").val(),
+      let addGroupName = $("#addNewGroupPopup input").val(),
         curGroupNames = [],
         duplicate = false;
       if (addGroupName) {
         $(".groupName").each(function (i, ele) {
           curGroupNames.push($(ele).text());
         });
-        for (var i in curGroupNames) {
-          if (curGroupNames[i] == addGroupName) {
+        for (let i in curGroupNames) {
+          if (curGroupNames[i] === addGroupName) {
             duplicate = true;
             break;
           }
@@ -361,7 +409,7 @@ var group = (function ($) {
           notie.alert(3, "已经存在组：'" + addGroupName + ",'请输入不重复的组名！", 2);
         } else {
           //页面插入组元素
-          var insertHtml = "<div class='groupWrap'><div class='group'><span class='groupName'>" + addGroupName + "<button type='button' class='close'><span aria-hidden='true'>×</span> </button> </span><span class='glyphicon glyphicon-plus addGroupBtn' aria-hidden='true'></span></div>" +
+          let insertHtml = "<div class='groupWrap'><div class='group'><span class='groupName'>" + addGroupName + "<button type='button' class='close'><span aria-hidden='true'>×</span> </button> </span><span class='glyphicon glyphicon-plus addGroupBtn' aria-hidden='true'></span></div>" +
             "<div class='links addNewLinks'><span class='glyphicon glyphicon-plus' aria-hidden='true'></span><a href='javascript:;'><span class='linkName'>添加新链接</span></a></div></div>";
 
           $("#addNewGroupPopup").modal("hide");
@@ -375,37 +423,40 @@ var group = (function ($) {
           common.Listener(".addGroupBtn", "click");
 
           // 保存新组数据到数据库
-          db.add("links", {group: addGroupName}, {group: addGroupName}, function () {
+          db.add("links",
+              {group: addGroupName},
+              {group: addGroupName},
+              function () {
             $(".contentwrap").append(insertHtml);
             window.location.reload();
-          });
+          }, "保存成功");
         }
       } else {
         notie.alert(2, "请输入组名！", 2);
       }
     });
   };
+
   return {
     ev: ev
   };
 })(jQuery);
 
-
 //链接相关操作
-var links = (function ($) {
-  var ev = function () {
+const links = (function ($) {
+  const ev = function () {
     //链接hover效果
     common.Listener(".links", "mouseover", function () {
       $(this).css({
         boxShadow: "1px 1px 10px 1px lightblue"
         // fontSize: "larger"
       });
-      var editBtn = $(this).find(".glyphicon-edit");
+      const editBtn = $(this).find(".glyphicon-edit");
       editBtn.show();
     });
     common.Listener(".links", "mouseout", function () {
       $(this).removeAttr("style");
-      var editBtn = $(this).find(".glyphicon-edit");
+      const editBtn = $(this).find(".glyphicon-edit");
       editBtn.hide();
     });
 
@@ -421,7 +472,7 @@ var links = (function ($) {
       });
     });
     common.Listener(".addNewLinks", "click", function () {
-      var insertPos = $(this).attr("index");       //新链接要添加的位置（insertAfter）
+      const insertPos = $(this).attr("index");       //新链接要添加的位置（insertAfter）
       $("#addNewLinkPopup").modal({
         keyboard: true,
         show: true
@@ -431,7 +482,7 @@ var links = (function ($) {
 
     //新加链接的url合法性检查
     common.Listener(".addNewLinksUrl", "change", function (e) {
-      var pattern = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/i;
+      const pattern = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/i;
       common.validCheck(e.target, pattern);
     });
 
@@ -441,14 +492,14 @@ var links = (function ($) {
         notie.alert(2, "请先登录！", 2);
         return;
       }
-      var name = $("#addNewLinkPopup .addNewLinksName").val(),
+      let name = $("#addNewLinkPopup .addNewLinksName").val(),
         url = $("#addNewLinkPopup .addNewLinksUrl").val();
       if (name && url) {
         if (!/^http/.test(url)) {
           url = "//" + url;
         }
-        var insertHtml = "<div class='links'><a target='_blank' href='" + url + "'><span class='linkName'>" + name + "</span></a><span class='glyphicon glyphicon-edit' aria-hidden='true' style='display: none;'></span></div>";
-        var index = parseInt($(this).attr("index")) + 1;
+        let insertHtml = "<div class='links'><a target='_blank' href='" + url + "'><span class='linkName'>" + name + "</span></a><span class='glyphicon glyphicon-edit' aria-hidden='true' style='display: none;'></span></div>";
+        let index = parseInt($(this).attr("index")) + 1;
 
         $("#addNewLinkPopup").modal('hide');
         //添加事件
@@ -457,7 +508,7 @@ var links = (function ($) {
             boxShadow: "1px 1px 10px 1px lightblue",
             fontSize: "larger"
           });
-          var editBtn = $(this).find(".glyphicon-edit");
+          const editBtn = $(this).find(".glyphicon-edit");
           editBtn.show();
         });
         common.Listener(".links", "mouseout", function () {
@@ -465,16 +516,20 @@ var links = (function ($) {
             boxShadow: "none",
             fontSize: "normal"
           });
-          var editBtn = $(this).find(".glyphicon-edit");
+          const editBtn = $(this).find(".glyphicon-edit");
           editBtn.hide();
         });
 
         // 存到数据库，读取用户信息，存到对应的数据库表
-        var groupName = common.strTrim($(".addNewLinks[index=" + (index - 1) + "]").siblings(".group").children(".groupName").text());
-        db.add("links", {group: groupName, linkName: name}, {group: groupName, linkName: name, url: url}, function () {
+        const groupName = common.strTrim($(".addNewLinks[index=" + (index - 1) + "]").siblings(".group").children(".groupName").text());
+        db.add("links",
+            {group: groupName, linkName: name},
+            {group: groupName, linkName: name, url: url},
+            function () {
           $(".groupWrap:nth-child(" + index + ") .links:last").before(insertHtml);
           window.location.reload();
-        });
+        },
+            "保存成功");
       } else {
         if (!name) $("#addNewLinkPopup .addNewLinksName").addClass("alert-danger");
         else $("#addNewLinkPopup .addNewLinksName").removeClass("alert-danger");
@@ -489,7 +544,7 @@ var links = (function ($) {
 })(jQuery);
 
 //通知
-var notice = function () {
+const notice = function () {
   //notie.alert(1,"最近HTTPS证书过期了，网站被Chrome标记为不安全，我暂时还没时间处理，请大家放心，站点不是被黑了...另外随着用户变多了，UI有必要美化美化，后面我会升级一下，敬请期待",5);
 	//notie.alert(4,"大侠请放心，您保存在此的数据永远不会丢失，即使哪天网站运行不下去了，数据一样可以导出。新上线导出功能可以试试哦~",3);
 };

@@ -1,20 +1,20 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var session = require('express-session');
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const session = require('express-session');
 
-var routes = require('./routes/index');
-var users = require('./routes/login');
-var stat = require('./routes/stat');
-var invest = require('./routes/invest');
+const routes = require('./routes/index');
+const users = require('./routes/login');
+const stat = require('./routes/stat');
+const invest = require('./routes/invest');
 
-var mongoose = require("./lib/mongoose");
-var compression = require('compression');
+const mongoose = require("./lib/mongoose");
+const compression = require('compression');
 
-var app = express();
+const app = express();
 //开启gzip压缩
 app.use(compression());
 
@@ -64,7 +64,7 @@ app.get('/getInput',invest.getInput(mongoose));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  const err = new Error('Not Found');
   err.status = 404;
   next(err);
 });

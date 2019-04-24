@@ -43,8 +43,12 @@
         <div class="contentwrap">
 
             <div class="group" style="border: none;background: none;margin: 5px 0 10px;">
+                <div style="position: absolute;top: 5px;right: 100px;" id="addGroup">
+                    <a href="javascript:;">添加新组</a>
+                </div>
+
                 <div style="position: absolute;top: 5px;right: 10px;" id="export">
-                    <a href="/export">导出</a>
+                    <a href="/export">导出全部</a>
                 </div>
             </div>
 
@@ -56,11 +60,11 @@
                         <div class="group">
                             <span class="groupName">
                                 <%= group %>
-                                <button type="button" class="close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
+<!--                                <button type="button" class="close">-->
+<!--                                    <span aria-hidden="true">×</span>-->
+<!--                                </button>-->
                             </span>
-                            <span class="glyphicon glyphicon-plus addGroupBtn" aria-hidden="true"></span>
+                            <span class="glyphicon glyphicon-remove removeGroupBtn" aria-hidden="true"></span>
                         </div>
             <%
                         for(var j in ret){
@@ -114,6 +118,23 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" domdot="cancelGroup">取消</button>
                 <button type="button" class="btn btn-primary saveGroupBtn" domdot="saveGroup">保存</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="removeGroupPopup" role="dialog" aria-labelledby="modal-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="addGroup-title" domdot="delete">删除该组</h4>
+            </div>
+            <div class="modal-body">
+                <p>删除组后，组内保存链接不可恢复，确认删除吗？</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" domdot="cancel">取消</button>
+                <button type="button" class="btn btn-primary" id="deleteGroupBtn" domdot="deleteGroup">确认</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

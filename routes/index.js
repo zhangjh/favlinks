@@ -1,23 +1,22 @@
-var routes = {};
+let routes = {};
 
-var fs = require('fs');
+const fs = require('fs');
 
 //更改操作时校验用户合法性
 function validUserCheck(req,user) {
-    var sessionUser = req.session.user;
+    const sessionUser = req.session.user;
     // console.log(sessionUser);
-    if(sessionUser == user)return true;
-    else return false;
+    return sessionUser === user;
 }
 
 routes.index = function(mongoose){
     return function(req,res){
-        var findPattern = {user:"default"};
-        var cookie = req.headers.cookie || "";
+        let findPattern = {user:"default"};
+        let cookie = req.headers.cookie || "";
         cookie = cookie.split(";");
-        var cookieUser = "default",
+        let cookieUser = "default",
             sessionUser = "default";
-        for(var i in cookie){
+        for(let i in cookie){
             if(/user/.test(cookie[i])){
                 cookieUser = decodeURIComponent(cookie[i].split("=")[1]);
             }
@@ -26,7 +25,7 @@ routes.index = function(mongoose){
             sessionUser = req.session.user;
         }
         //防止伪造cookie登录
-        if(cookieUser == sessionUser){
+        if(cookieUser === sessionUser){
             findPattern = {user: sessionUser};
         }else {
             res.clearCookie("user",{});
@@ -34,16 +33,16 @@ routes.index = function(mongoose){
         }
         //找出用户定义的网址，否则展示默认的
         mongoose.find("links",findPattern,function(ret){
-            var groups = [];
-            var group;
-            for(var i in ret){
+            let groups = [];
+            let group;
+            for(let i in ret){
                 group = ret[i].group;
                 //新的group组名压入groups
-                if(group && groups.indexOf(group) == -1){
+                if(group && groups.indexOf(group) === -1){
                     groups.push(group);
                 }
             }
-            if(groups.length == 0){
+            if(groups.length === 0){
                 //没有内容时为了可以新增，保留一个默认组
                 groups.push("默认");
             }
@@ -56,8 +55,8 @@ routes.index = function(mongoose){
 
 routes.add = function (mongoose) {
     return function (req,res) {
-        var collection = req.query.collection,
-            findPattern = req.query.findPattern || new Object(),
+        const collection = req.query.collection,
+            findPattern = req.query.findPattern || {},
             data = req.query.data,
             user = req.query.user;
         //用户校验
@@ -85,7 +84,7 @@ routes.add = function (mongoose) {
 
 routes.update = function (mongoose) {
     return function (req,res) {
-      var collection = req.query.collection,
+      const collection = req.query.collection,
           findPattern = req.query.findPattern,
           data = req.query.data,
           user = req.query.user;
@@ -108,11 +107,11 @@ routes.update = function (mongoose) {
 
 routes.remove  = function (mongoose) {
   return function (req,res) {
-      var collection = req.query.collection,
+      const collection = req.query.collection,
           data = req.query.data,
           user = req.query.user;
       if(validUserCheck(req,user)){
-          var findPattern = {user: user};
+          const findPattern = {user: user};
           mongoose.find(collection,findPattern,function (resu) {
               if(!resu.length){
                   res.json({status:1,msg:"Error: no data to remove."});
@@ -130,7 +129,7 @@ routes.remove  = function (mongoose) {
 
 routes.select = function (mongoose) {
   return function (req, res) {
-      var collection = req.query.collection,
+      const collection = req.query.collection,
           findPattern = req.query.findPattern;
       if(collection){
           mongoose.find(collection,findPattern,function (resu) {
@@ -143,15 +142,15 @@ routes.select = function (mongoose) {
 // 复制defaul数据给新注册用户
 routes.copy = function (mongoose) {
     return function (req, res) {
-        var collection = req.query.collection,
+        const collection = req.query.collection,
             find = req.query.find,
             user = req.query.user;
-        var tem = {},
+        let tem = {},
             item = {},
             retu = [];
         if(collection){
             mongoose.find(collection,find,function (resu) {
-                for(var i in resu){
+                for(let i in resu){
                     item = resu[i];
                     tem.user = user;
                     tem.group = item.group;
@@ -159,7 +158,7 @@ routes.copy = function (mongoose) {
                     tem.url = item.url;
                     mongoose.insert(collection,tem,function (e) {
                         retu.push(e);
-                        if(retu.length == resu.length){
+                        if(retu.length === resu.length){
                             res.json({status:0,msg:"copy succ"});
                         }
                     });
@@ -177,7 +176,7 @@ routes.export = function (mongoose) {
         let cookieUser = undefined;
         let findPattern = {};
 
-        let cookie = req.headers.cookie || "";
+        const cookie = req.headers.cookie || "";
 
         for(let item of cookie.split(";")){
             if(/user/.test(item)){
@@ -190,16 +189,12 @@ routes.export = function (mongoose) {
             sessionUser = req.session.user;
         }
 
-		console.log("cookie: " + cookie);
-		console.log("cookieUser: " + cookieUser);
-		console.log("sessionUser: " + sessionUser);
-
         //防止伪造cookie登录
         if(cookieUser && sessionUser && cookieUser === sessionUser){
             findPattern = {user: sessionUser};
             mongoose.find("links",findPattern,resu => {
                 // 拼装xml格式书签供下载
-                let head =
+                const head =
                     `<!DOCTYPE NETSCAPE-Bookmark-file-1>
                     <!-- This is an automatically generated file.
                      It will be read and overwritten.
@@ -238,7 +233,7 @@ routes.export = function (mongoose) {
                     </DL><p>`;
 
                 if(html){
-                    let filePath = 'public/export/' + sessionUser + "_导出.html";
+                    const filePath = 'public/export/' + sessionUser + "_导出.html";
                     fs.writeFile(process.cwd() + "/" + filePath,html,function (err) {
                         if(err){
                             res.json({status: 1,msg: err});

@@ -1,15 +1,15 @@
 /**
  * Created by jihong.zjh on 2016/5/11.
  */
-var nodemailer = require('nodemailer');
-var crypto = require("crypto");
-var config = require("../conf/config");
+const nodemailer = require('nodemailer');
+const crypto = require("crypto");
+const config = require("../conf/config");
 
-var users = {};
-var secret = config.secret;
+let users = {};
+let secret = config.secret;
 
 function sendMail(to,content) {
-    var transport = nodemailer.createTransport("SMTP",{
+    const transport = nodemailer.createTransport("SMTP",{
         host: "smtp.126.com",
         secureConnection: true,
         port: 465,
@@ -32,26 +32,26 @@ function sendMail(to,content) {
 
 //加解密
 function encrypt(str,secret) {
-    var cipher = crypto.createCipher('aes192',secret);
-    var enc = cipher.update(str,'utf8','hex');
+    const cipher = crypto.createCipher('aes192',secret);
+    let enc = cipher.update(str,'utf8','hex');
     enc += cipher.final('hex');
     return enc;
 }
 
 function decrypt(str,secret) {
-    var decipher = crypto.createDecipher('aes192',secret);
-    var dec = decipher.update(str,'hex','utf8');
+    const decipher = crypto.createDecipher('aes192',secret);
+    let dec = decipher.update(str,'hex','utf8');
     dec += decipher.final('utf8');
     return dec;
 }
 
 users.passwdencrypt = function(mongoose) {
 	return function(req,res) {
-		var passwd = req.body.passwd;
+		const passwd = req.body.passwd;
 		if(!passwd) {
 			return res.json({status: 1, msg: "密码为空"});
 		}
-		var enc = encrypt(passwd, config.secret);
+		const enc = encrypt(passwd, config.secret);
 		if(!enc) {
 			return res.json({status: 1, msg: "密码为空"});
 		}
@@ -61,13 +61,13 @@ users.passwdencrypt = function(mongoose) {
 	
 users.login = function (mongoose) {
     return function (req,res) {
-        var user = req.body.user,
+        const user = req.body.user,
             passwd = req.body.passwd;
         mongoose.find("user",{user:user},function (resu) {
             //判断用户名密码
             //登录成功后写入cookie，seession，跳转
             if(resu.length){
-                if(passwd == resu[0].passwd){
+                if(passwd === resu[0].passwd){
                     //登录成功
                     req.session.user = user;
                     req.session.isLogin = true;
@@ -84,10 +84,10 @@ users.login = function (mongoose) {
 
 users.signup = function (mongoose) {
     return function (req,res) {
-        var user = req.body.user,
+        const user = req.body.user,
             passwd = req.body.passwd,
             email = req.body.email;
-        var encPasswd = encrypt(passwd,secret);
+        const encPasswd = encrypt(passwd,secret);
         
         mongoose.find("user",{user:user},function (resu) {
             if(resu.length){
@@ -118,7 +118,7 @@ users.logout = function () {
 
 users.forget = function (mongoose) {
     return function (req, res) {
-        var user = req.body.user,
+        const user = req.body.user,
             email = req.body.email;
         mongoose.find("user",{user:user},function (resu) {
             if(!resu.length){
