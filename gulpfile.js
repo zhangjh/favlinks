@@ -2,6 +2,8 @@
  * Created by jihong.zjh on 2016/5/24.
  */
 var gulp = require('gulp');
+var gulpif   = require('gulp-if');
+var debug = false;
 /*var minifyCss = require('gulp-minify-css');
  var rename = require('gulp-rename');
  var uglify = require('gulp-uglify');
@@ -24,10 +26,10 @@ gulp.task('css',["clean"],function(){
 gulp.task('js',['clean'],function(){
     return gulp.src('public/js/*.js')
         .pipe(babel())
-        .pipe(plugins.uglify().on('error',function (err) {
+        .pipe(gulpif(!debug, plugins.uglify().on('error',function (err) {
             console.error(err);
             this.emit('end');
-        }))
+        })))
         .pipe(plugins.rename({suffix:'.min'}))
         .pipe(gulp.dest('public/js/'));
 });
