@@ -429,7 +429,7 @@ const group = (function ($) {
               {group: addGroupName},
               function () {
             $(".contentwrap").append(insertHtml);
-            // window.location.reload();
+            window.location.reload();
           }, "保存成功");
         }
       } else {
@@ -528,7 +528,7 @@ const links = (function ($) {
             {group: groupName, linkName: name, url: url},
             function () {
           $(".groupWrap:nth-child(" + index + ") .links:last").before(insertHtml);
-          // window.location.reload();
+          window.location.reload();
         },
             "保存成功");
       } else {
