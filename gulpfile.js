@@ -6,6 +6,7 @@ var gulp = require('gulp');
  var rename = require('gulp-rename');
  var uglify = require('gulp-uglify');
  */
+var babel = require('gulp-babel');
 var plugins = require('gulp-load-plugins')();
 
 gulp.task("clean",function() {
@@ -22,7 +23,11 @@ gulp.task('css',["clean"],function(){
 
 gulp.task('js',['clean'],function(){
     return gulp.src('public/js/*.js')
-        .pipe(plugins.uglify())
+        .pipe(babel())
+        .pipe(plugins.uglify().on('error',function (err) {
+            console.error(err);
+            this.emit('end');
+        }))
         .pipe(plugins.rename({suffix:'.min'}))
         .pipe(gulp.dest('public/js/'));
 });

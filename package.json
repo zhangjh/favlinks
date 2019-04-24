@@ -8,7 +8,6 @@
     "dev": "webpack"
   },
   "dependencies": {
-    "@babel/preset-env": "^7.2.3",
     "body-parser": "~1.13.2",
     "compression": "^1.6.2",
     "connect-mongo": "~0.4.1",
@@ -53,6 +52,9 @@
   },
   "homepage": "https://gitlab.com/zhangjh/favLinks#README",
   "devDependencies": {
+    "@babel/core": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
+    "gulp-babel": "^8.0.0-beta.2",
     "webpack-cli": "^3.2.1"
   }
 }
