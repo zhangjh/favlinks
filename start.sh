@@ -6,7 +6,10 @@ if [[ "X$1" == "X" ]];then
 fi
 
 ##1. 查找服务进程杀之
-ps -ef | grep "node" | grep "favlinks" | awk '{print $2}' | grep -v grep | xargs kill
+pid=`netstat -nap | grep 3000 | awk '{print $7}' | cut -d '/' -f 1`
+if [ "X${pid}" != "X" ];then
+	kill -9 ${pid}
+fi
 #
 ##2. 本地化
 sed -i "s/DEBUG =.*/DEBUG = ${MODE};/" lib/mongoose.js
