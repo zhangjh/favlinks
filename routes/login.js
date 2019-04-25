@@ -6,7 +6,7 @@ const crypto = require("crypto");
 const config = require("../conf/config");
 
 let users = {};
-let secret = config.secret;
+const secret = config.secret;
 
 function sendMail(to,content) {
     const transport = nodemailer.createTransport("SMTP",{
@@ -23,7 +23,8 @@ function sendMail(to,content) {
         from: "favlinks@126.com",
         to: to,
         subject: "忘记密码",
-        text: "您在favlink.me的注册密码是： " + content
+        text: "您在favlink.cn的注册密码是： " + content +
+            "，\n\nfavlink.cn只存储密文，该密码明文由程序在传输过程中自动计算得出，任何人都不会获知，请放心使用。"
     },function(err,info){
         if(err)console.error("error:",err);
         else console.log("res:",info.message);
@@ -31,14 +32,14 @@ function sendMail(to,content) {
 }
 
 //加解密
-function encrypt(str,secret) {
+function encrypt(str) {
     const cipher = crypto.createCipher('aes192',secret);
     let enc = cipher.update(str,'utf8','hex');
     enc += cipher.final('hex');
     return enc;
 }
 
-function decrypt(str,secret) {
+function decrypt(str) {
     const decipher = crypto.createDecipher('aes192',secret);
     let dec = decipher.update(str,'hex','utf8');
     dec += decipher.final('utf8');
@@ -51,7 +52,7 @@ users.login = function (mongoose) {
         let rawPasswd = headers['x-requested-biz'];
 
         const user = req.body.user,
-            passwd = encrypt(rawPasswd, config.secret);
+            passwd = encrypt(rawPasswd);
 
         mongoose.find("user",{user:user},function (resu) {
             //判断用户名密码
@@ -118,7 +119,7 @@ users.forget = function (mongoose) {
                     res.json({status: 1,msg: "注册邮箱不匹配！"});
                 }else {
                     //发送密码到注册邮箱
-                    sendMail(email,resu[0].passwd);
+                    sendMail(email,decrypt(resu[0].passwd));
                     res.json({status: 0,msg: "密码已经发送到注册邮箱，请查收！"});
                 }
             }
