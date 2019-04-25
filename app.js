@@ -45,7 +45,6 @@ app.get('/select',routes.select(mongoose));
 app.get('/copy',routes.copy(mongoose));
 app.get('/export',routes.export(mongoose));
 app.post('/login',users.login(mongoose));
-app.post('/passwdencrypt',users.passwdencrypt(mongoose));
 app.post('/signup',users.signup(mongoose));
 app.get('/logout',users.logout());
 app.post('/forget',users.forget(mongoose));

@@ -44,25 +44,15 @@ function decrypt(str,secret) {
     dec += decipher.final('utf8');
     return dec;
 }
-
-users.passwdencrypt = function(mongoose) {
-	return function(req,res) {
-		const passwd = req.body.passwd;
-		if(!passwd) {
-			return res.json({status: 1, msg: "密码为空"});
-		}
-		const enc = encrypt(passwd, config.secret);
-		if(!enc) {
-			return res.json({status: 1, msg: "密码为空"});
-		}
-		res.json({status: 0, data: enc});
-	};
-};
 	
 users.login = function (mongoose) {
     return function (req,res) {
+        const headers = req.headers;
+        let rawPasswd = headers['x-requested-biz'];
+
         const user = req.body.user,
-            passwd = req.body.passwd;
+            passwd = encrypt(rawPasswd, config.secret);
+
         mongoose.find("user",{user:user},function (resu) {
             //判断用户名密码
             //登录成功后写入cookie，seession，跳转
