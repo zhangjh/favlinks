@@ -133,7 +133,7 @@ $("#loginTips").on("click",function () {
 // github
 const githubApi = "https://github.com/login/oauth/authorize";
 const clientId = "Iv1.8d48be128f9a0118";
-const redirectUri = "http://localhost:3000/oauth/redirect";
+const redirectUri = "https://favlink.cn/oauth/redirect";
 $("#login-with-github").attr("href",
     githubApi +
     "?client_id=" + clientId +
