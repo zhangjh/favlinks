@@ -52,6 +52,9 @@ app.get('/insertInfo',stat.insertInfo(mongoose));
 app.get('/domdot',stat.domdot(mongoose));
 app.get('/visit',stat.visit(mongoose));
 
+// 第三方登录
+app.get('/oauth/redirect',users.oauth(mongoose));
+
 // 指数定投工具
 app.get('/trade',invest.trade());
 app.get('/investStat',invest.stat(mongoose));

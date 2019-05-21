@@ -78,7 +78,6 @@ $("#signupBtn").on("click",function () {
                 document.cookie = "user=" + encodeURIComponent(user) + ";expires=" + expires.toGMTString();
                 document.cookie = "isLogin=true;expires=" + expires.toGMTString();
                 $("#loginTips").modal("show");
-                window.location.reload();
             }else {
                 notie.alert(3,"注册失败：" + ret.msg,3);
             }
@@ -129,3 +128,19 @@ $("#cancelTipsBtn").on("click",function () {
 $("#loginTips").on("click",function () {
     window.location.reload();
 });
+
+// 第三方登录
+// github
+const githubApi = "https://github.com/login/oauth/authorize";
+const clientId = "Iv1.8d48be128f9a0118";
+const redirectUri = "http://localhost:3000/oauth/redirect";
+$("#login-with-github").attr("href",
+    githubApi +
+    "?client_id=" + clientId +
+    "&redirect_uri=" + redirectUri);
+
+// qq
+$("#login-with-qq").attr("href","");
+
+// weibo
+$("#login-with-weibo").attr("href","");

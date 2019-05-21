@@ -31,6 +31,7 @@
     "morgan": "~1.6.1",
     "nodemailer": "0.7.1",
     "passport": "~0.3.2",
+    "request": "^2.88.0",
     "serve-favicon": "~2.3.0",
     "style-loader": "^0.23.1",
     "supervisor": "~0.10.0",

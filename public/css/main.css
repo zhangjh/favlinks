@@ -347,3 +347,16 @@ aside .row a:hover {
   padding: 5px;
   text-decoration: none;
 }
+
+#social-login {
+  margin: 10px 5px;
+}
+
+#social-login .iconfont {
+  padding: 5px;
+  font-size: 30px;
+}
+
+#social-login a {
+  text-decoration: none;
+}

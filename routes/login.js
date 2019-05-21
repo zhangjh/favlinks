@@ -4,6 +4,7 @@
 const nodemailer = require('nodemailer');
 const crypto = require("crypto");
 const config = require("../conf/config");
+const request = require('request');
 
 let users = {};
 const secret = config.secret;
@@ -125,6 +126,79 @@ users.forget = function (mongoose) {
             }
         });
     };
+};
+
+users.oauth = function (mongoose) {
+    return function (req, res) {
+        const code = req.query.code;
+        if(!code) {
+            res.json({status: 1, msg: "参数错误"});
+            return;
+        }
+
+        // 拿code换取token，再换取用户信息
+        const url = "https://github.com/login/oauth/access_token?client_id="
+            + config.clientId + "&client_secret="
+            + config.clientSecret + "&code="
+            + code;
+        const options = {
+            headers: {
+                accept: 'application/json'
+            },
+        };
+
+        request.post(url, options, (e, r, body) => {
+            if(e) {
+                res.json({status: 1,msg: e});
+                return;
+            }
+
+            let accessToken = JSON.parse(body).access_token;
+
+            let url = "https://api.github.com/user";
+            let options = {
+                headers: {
+                    accept: 'application/json',
+                    Authorization: `token ${accessToken}`,
+                    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.108 Safari/537.36"
+                }
+            };
+
+            request.get(url, options, (e, r, body) => {
+                if(e) {
+                    res.json({status: 1,msg: e});
+                    return;
+                }
+                const bodyJson = JSON.parse(body);
+                const user = bodyJson.login;
+                const email = bodyJson.email;
+
+                if(!user || !email) {
+                    res.json({status: 1,msg: "未获取到用户信息"});
+                    return;
+                }
+
+                mongoose.find("user",{user:user},function (resu) {
+                    if(!resu.length){
+                        mongoose.insert("user",{user: user,email: email},function () {
+                            console.info("注册成功");
+                        });
+                    }
+                    req.session.user = user;
+                    req.session.isLogin = true;
+                    res.clearCookie("user",{});
+
+                    // 操作写入cookie
+                    let expires = new Date();
+                    let expiresTime = expires.getTime() + 14*24*60*60*1000;
+
+                    res.cookie("user", encodeURIComponent(user), {maxAge: expiresTime});
+                    res.cookie("isLogin", true, {maxAge: expiresTime});
+                    res.redirect("/");
+                });
+            });
+        });
+    }
 };
 
 module.exports = users;
