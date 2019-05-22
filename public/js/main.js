@@ -313,7 +313,7 @@ const page = (function ($) {
       $(this).animate({height: "100px"});
     });
   };
-
+  
   const wxDisplay = function () {
     $(".fa-weixin").click(function () {
       $("#wx_img_wrapper").show();
@@ -340,7 +340,7 @@ const page = (function ($) {
     updateGroup: updateGroup,
     deleteGroup: deleteGroup,
     adjustMobile: adjustMobile,
-    asideImgHover: asideImgHover,
+    //asideImgHover: asideImgHover,
     wxDisplay: wxDisplay
   };
 })(jQuery);
@@ -574,7 +574,7 @@ const notice = function () {
   page.updateGroup();
   page.deleteGroup();
   page.adjustMobile();
-  page.asideImgHover();
+  //page.asideImgHover();
   page.wxDisplay();
 
   //goTop
