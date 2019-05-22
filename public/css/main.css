@@ -129,6 +129,9 @@ div.links {
   margin:6px 5px;
   border: 1px solid #e8e8e8;
   background: azure;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
 }
 
 .linkName {
