@@ -199,6 +199,8 @@ users.wbRedirect = function (mongoose) {
             + "&redirect_uri=" + config.appLogin.weibo.redirect_uri
             + "&code=" + code;
 
+        console.log("url:" + url);
+
         request.post({
             url: url,
         }, (e, r, body) => {
