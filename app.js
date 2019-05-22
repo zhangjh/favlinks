@@ -54,6 +54,7 @@ app.get('/visit',stat.visit(mongoose));
 
 // 第三方登录
 app.get('/oauth/redirect',users.oauth(mongoose));
+app.get('/oauth/wbRedirect',users.wbRedirect(mongoose));
 
 // 指数定投工具
 app.get('/trade',invest.trade());

@@ -143,4 +143,10 @@ $("#login-with-github").attr("href",
 $("#login-with-qq").attr("href","");
 
 // weibo
-$("#login-with-weibo").attr("href","");
+const wbClientId = "1326506754";
+const wbApi = "https://api.weibo.com/oauth2/authorize";
+const wbRedirectUri = "https://favlink.cn/oauth/wbRedirect";
+$("#login-with-weibo").attr("href", wbApi +
+    "?client_id=" + wbClientId +
+    "&response_type=code" +
+    "&redirect_uri=" + wbRedirectUri);

@@ -128,6 +128,7 @@ users.forget = function (mongoose) {
     };
 };
 
+// github登录回调
 users.oauth = function (mongoose) {
     return function (req, res) {
         const code = req.query.code;
@@ -172,33 +173,98 @@ users.oauth = function (mongoose) {
                 const bodyJson = JSON.parse(body);
                 const user = bodyJson.login;
                 const email = bodyJson.email;
+                const data = JSON.stringify(body);
 
                 if(!user || !email) {
                     res.json({status: 1,msg: "未获取到用户信息"});
                     return;
                 }
 
-                mongoose.find("user",{user:user},function (resu) {
-                    if(!resu.length){
-                        mongoose.insert("user",{user: user,email: email},function () {
-                            console.info("注册成功");
-                        });
-                    }
-                    req.session.user = user;
-                    req.session.isLogin = true;
-                    res.clearCookie("user",{});
-
-                    // 操作写入cookie
-                    let expires = new Date();
-                    let expiresTime = expires.getTime() + 14*24*60*60*1000;
-
-                    res.cookie("user", encodeURIComponent(user), {maxAge: expiresTime});
-                    res.cookie("isLogin", true, {maxAge: expiresTime});
-                    res.redirect("/");
+                afterLogin(req, res, mongoose, {
+                    user, email, data
                 });
             });
         });
     }
+};
+
+// 微博登录回调
+users.wbRedirect = function (mongoose) {
+    return function (req, res) {
+        const code = req.query.code;
+
+        url = "https://api.weibo.com/oauth2/access_token?client_id="
+            + config.appLogin.weibo.clientId + "&client_secret="
+            + config.appLogin.weibo.clientSecret + "&grant_type=authorization_code"
+            + "&redirect_uri=" + config.appLogin.weibo.redirect_uri
+            + "&code=" + code;
+
+        request.post({
+            url: url,
+        }, (e, r, body) => {
+            console.log(e);
+            if(e) {
+                res.json({status: 1,msg: e});
+                return;
+            }
+            let accessToken = JSON.parse(body).access_token;
+
+            const url = "https://api.weibo.com/oauth2/get_token_info?access_token=" + accessToken;
+            let getUserUrl = "https://api.weibo.com/2/users/show.json?access_token=" + accessToken +
+                "&appKey=" + config.appLogin.weibo.clientId;
+
+            request.post(url, (e,r,body) => {
+                if(e) {
+                    res.json({status: 1,msg: e});
+                    return;
+                }
+                const bodyJson = JSON.parse(body);
+                const uid = bodyJson.uid;
+                getUserUrl += "&uid=" + uid;
+                request.get(getUserUrl, (e,r,body) => {
+                    if(e) {
+                        res.json({status: 1,msg: e});
+                        return;
+                    }
+                    const userInfo = JSON.parse(body);
+                    const user = userInfo.name;
+                    const email = "";
+                    const data = JSON.stringify(body);
+
+                    afterLogin(req, res, mongoose, {
+                        user, email, data
+                    })
+                });
+            });
+        });
+    }
+};
+
+/** 第三方登录成功后的处理
+ * @param req
+ * @param res
+ * @param mongoose
+ * @param userInfo，必须包含user、email、data
+ */
+let afterLogin = function (req, res, mongoose, userInfo) {
+    mongoose.find("user",{user: userInfo.user},function (resu) {
+        if(!resu.length){
+            mongoose.insert("user", userInfo, () => {
+                console.info("注册成功");
+            });
+        }
+        req.session.user = userInfo.user;
+        req.session.isLogin = true;
+        res.clearCookie("user",{});
+
+        // 操作写入cookie
+        let expires = new Date();
+        let expiresTime = expires.getTime() + 14*24*60*60*1000;
+
+        res.cookie("user", encodeURIComponent(userInfo.user), {maxAge: expiresTime});
+        res.cookie("isLogin", true, {maxAge: expiresTime});
+        res.redirect("/");
+    });
 };
 
 module.exports = users;
