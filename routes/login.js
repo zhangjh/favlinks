@@ -237,9 +237,9 @@ users.wbRedirect = function (mongoose) {
                     res.cookie("isLogin", true);
                     res.cookie("user", encodeURIComponent(user));
 
-                    afterLogin(req, res, mongoose, {
-                        user, email, body
-                    });
+                    // afterLogin(req, res, mongoose, {
+                    //     user, email, body
+                    // });
                 });
             });
         });
