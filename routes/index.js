@@ -28,6 +28,7 @@ routes.index = function(mongoose){
         if(cookieUser === sessionUser){
             findPattern = {user: sessionUser};
         }else {
+            console.info("登录信息不匹配");
             res.clearCookie("user",{});
             res.cookie("isLogin","false");
         }

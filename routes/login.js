@@ -182,7 +182,7 @@ users.oauth = function (mongoose) {
                 }
 
                 afterLogin(req, res, mongoose, {
-                    user, email, body
+                    encodeURIComponent(user), email, body
                 });
             });
         });
@@ -262,7 +262,7 @@ let afterLogin = function (req, res, mongoose, userInfo) {
         let expires = new Date();
         let expiresTime = expires.getTime() + 14*24*60*60*1000;
 
-        res.cookie("user", encodeURIComponent(userInfo.user), {maxAge: expiresTime});
+        res.cookie("user", userInfo.user, {maxAge: expiresTime});
         res.cookie("isLogin", true, {maxAge: expiresTime});
 
         console.info("write cookie ok");
