@@ -240,6 +240,7 @@ users.wbRedirect = function (mongoose) {
                     // afterLogin(req, res, mongoose, {
                     //     user, email, body
                     // });
+                    res.redirect("/");
                 });
             });
         });
