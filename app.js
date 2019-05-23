@@ -74,6 +74,7 @@ app.use(function(req, res, next) {
 
 // error handlers
 app.use(function (err, req, res, next) {
+  console.log(err);
   res.status(err.status || 500);
   res.render('error',{
     title: "favLinks--您的私人收藏夹 - 完全私人定制的网址收藏导航",
@@ -96,6 +97,7 @@ if (app.get('env') === 'development') {
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
+  console.log(err);
   res.status(err.status || 500);
   res.render('error_min', {
     message: err.message,
