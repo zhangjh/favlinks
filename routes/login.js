@@ -173,7 +173,8 @@ users.oauth = function (mongoose) {
                 const bodyJson = JSON.parse(body);
                 const user = bodyJson.login;
                 const email = bodyJson.email;
-                const data = JSON.stringify(body);
+
+                console.log(bodyJson);
 
                 if(!user || !email) {
                     res.json({status: 1,msg: "未获取到用户信息"});
@@ -181,7 +182,7 @@ users.oauth = function (mongoose) {
                 }
 
                 afterLogin(req, res, mongoose, {
-                    user, email, data
+                    user, email, body
                 });
             });
         });
@@ -230,10 +231,11 @@ users.wbRedirect = function (mongoose) {
                     const userInfo = JSON.parse(body);
                     const user = userInfo.name;
                     const email = "";
-                    const data = JSON.stringify(body);
+
+                    console.log(userInfo);
 
                     afterLogin(req, res, mongoose, {
-                        user, email, data
+                        user, email, body
                     })
                 });
             });
