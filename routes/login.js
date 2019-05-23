@@ -232,15 +232,9 @@ users.wbRedirect = function (mongoose) {
                     const user = userInfo.name;
                     const email = "";
 
-                    console.log(userInfo);
-
-                    res.cookie("isLogin", true);
-                    res.cookie("user", encodeURIComponent(user));
-
-                    // afterLogin(req, res, mongoose, {
-                    //     user, email, body
-                    // });
-                    res.redirect("/");
+                    afterLogin(req, res, mongoose, {
+                        user, email, body
+                    });
                 });
             });
         });
@@ -262,7 +256,7 @@ let afterLogin = function (req, res, mongoose, userInfo) {
         }
         req.session.user = userInfo.user;
         req.session.isLogin = true;
-        res.clearCookie("user",{});
+        // res.clearCookie("user",{});
 
         // 操作写入cookie
         let expires = new Date();
@@ -273,6 +267,8 @@ let afterLogin = function (req, res, mongoose, userInfo) {
 
         console.info("write cookie ok");
         console.info(userInfo.user);
+
+        console.log(req.cookies);
         res.redirect("/");
     });
 };
