@@ -234,9 +234,11 @@ users.wbRedirect = function (mongoose) {
 
                     console.log(userInfo);
 
+                    res.cookie({test: "test"});
+
                     afterLogin(req, res, mongoose, {
                         user, email, body
-                    })
+                    });
                 });
             });
         });
