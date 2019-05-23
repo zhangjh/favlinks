@@ -182,7 +182,7 @@ users.oauth = function (mongoose) {
                 }
 
                 afterLogin(req, res, mongoose, {
-                    encodeURIComponent(user), email, body
+                    user: encodeURIComponent(user), email, body
                 });
             });
         });
