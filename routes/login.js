@@ -204,7 +204,6 @@ users.wbRedirect = function (mongoose) {
         request.post({
             url: url,
         }, (e, r, body) => {
-            console.log(e);
             if(e) {
                 res.json({status: 1,msg: e});
                 return;
@@ -265,6 +264,9 @@ let afterLogin = function (req, res, mongoose, userInfo) {
 
         res.cookie("user", encodeURIComponent(userInfo.user), {maxAge: expiresTime});
         res.cookie("isLogin", true, {maxAge: expiresTime});
+
+        console.info("write cookie ok");
+        console.info(userInfo.user);
         res.redirect("/");
     });
 };
