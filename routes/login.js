@@ -234,7 +234,8 @@ users.wbRedirect = function (mongoose) {
 
                     console.log(userInfo);
 
-                    res.cookie({test: "test"});
+                    res.cookie("isLogin", true);
+                    res.cookie("user", encodeURIComponent(user));
 
                     afterLogin(req, res, mongoose, {
                         user, email, body
