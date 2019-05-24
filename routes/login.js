@@ -139,8 +139,8 @@ users.oauth = function (mongoose) {
 
         // 拿code换取token，再换取用户信息
         const url = "https://github.com/login/oauth/access_token?client_id="
-            + config.clientId + "&client_secret="
-            + config.clientSecret + "&code="
+            + config.appLogin.github.clientId + "&client_secret="
+            + config.appLogin.github.clientSecret + "&code="
             + code;
         const options = {
             headers: {
@@ -174,8 +174,6 @@ users.oauth = function (mongoose) {
                 const user = bodyJson.login;
                 const email = bodyJson.email;
 
-                console.log(bodyJson);
-
                 if(!user || !email) {
                     res.json({status: 1,msg: "未获取到用户信息"});
                     return;
@@ -199,8 +197,6 @@ users.wbRedirect = function (mongoose) {
             + config.appLogin.weibo.clientSecret + "&grant_type=authorization_code"
             + "&redirect_uri=" + config.appLogin.weibo.redirect_uri
             + "&code=" + code;
-
-        console.log("url:" + url);
 
         request.post({
             url: url,
@@ -265,10 +261,6 @@ let afterLogin = function (req, res, mongoose, userInfo) {
         res.cookie("user", userInfo.user, {maxAge: expiresTime});
         res.cookie("isLogin", true, {maxAge: expiresTime});
 
-        console.info("write cookie ok");
-        console.info(userInfo.user);
-
-        console.log(req.cookies);
         res.redirect("/");
     });
 };
