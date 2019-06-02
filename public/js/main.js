@@ -166,7 +166,7 @@ const page = (function ($) {
   };
 
   const setUserName = function () {
-    const user = common.getCookie("user");
+    const user = common.getCookie("name");
     $("#loginUser").text(user);
   };
 
@@ -427,9 +427,13 @@ const group = (function ($) {
           db.add("links",
               {group: addGroupName},
               {group: addGroupName},
-              function () {
-            $(".contentwrap").append(insertHtml);
-            window.location.reload();
+              ret => {
+            if(ret.status === 0) {
+              $(".contentwrap").append(insertHtml);
+              window.location.reload();
+            }else {
+              notie.alert(2, ret.msg, 2);
+            }
           }, "保存成功");
         }
       } else {
@@ -526,9 +530,14 @@ const links = (function ($) {
         db.add("links",
             {group: groupName, linkName: name},
             {group: groupName, linkName: name, url: url},
-            function () {
-          $(".groupWrap:nth-child(" + index + ") .links:last").before(insertHtml);
-          window.location.reload();
+            ret => {
+            if(ret.status === 0) {
+              $(".groupWrap:nth-child(" + index + ") .links:last").before(insertHtml);
+              // window.location.reload();
+            }else {
+              notie.alert(2, ret.msg, 2);
+            }
+
         },
             "保存成功");
       } else {
