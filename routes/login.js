@@ -249,6 +249,8 @@ let clearCookie = function (res) {
 };
 
 let setSession = function (req, session) {
+    console.info("session:");
+    console.info(session);
     req.session = session;
 };
 
