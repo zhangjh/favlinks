@@ -25,6 +25,8 @@ routes.index = function(mongoose){
             sessionUser = req.session.user;
         }
         //防止伪造cookie登录
+        console.info("cookieUser: " + cookieUser);
+        console.info("sessionUser: " + sessionUser);
         if(cookieUser === sessionUser){
             findPattern = {user: sessionUser};
         }else {
