@@ -172,6 +172,7 @@ users.oauth = function (mongoose) {
                 }
                 const bodyJson = JSON.parse(body);
                 const user = bodyJson.login;
+                const name = bodyJson.name;
                 const email = bodyJson.email;
 
                 console.log(bodyJson);
@@ -182,7 +183,7 @@ users.oauth = function (mongoose) {
                 }
 
                 afterLogin(req, res, mongoose, {
-                    user: encodeURIComponent(user), email, body
+                    user: encodeURIComponent(user), name, email, body
                 });
             });
         });
@@ -199,8 +200,6 @@ users.wbRedirect = function (mongoose) {
             + config.appLogin.weibo.clientSecret + "&grant_type=authorization_code"
             + "&redirect_uri=" + config.appLogin.weibo.redirect_uri
             + "&code=" + code;
-
-        console.log("url:" + url);
 
         request.post({
             url: url,
@@ -229,11 +228,12 @@ users.wbRedirect = function (mongoose) {
                         return;
                     }
                     const userInfo = JSON.parse(body);
-                    const user = userInfo.name;
+                    const user = uid;
+                    const name = userInfo.name;
                     const email = "";
 
                     afterLogin(req, res, mongoose, {
-                        user, email, body
+                        user, name, email, body
                     });
                 });
             });
@@ -256,19 +256,16 @@ let afterLogin = function (req, res, mongoose, userInfo) {
         }
         req.session.user = userInfo.user;
         req.session.isLogin = true;
-        // res.clearCookie("user",{});
+        res.clearCookie("user",{});
 
         // 操作写入cookie
         let expires = new Date();
         let expiresTime = expires.getTime() + 14*24*60*60*1000;
 
         res.cookie("user", userInfo.user, {maxAge: expiresTime});
+        res.cookie("name", userInfo.name, {maxAge: expiresTime});
         res.cookie("isLogin", true, {maxAge: expiresTime});
 
-        console.info("write cookie ok");
-        console.info(userInfo.user);
-
-        console.log(req.cookies);
         res.redirect("/");
     });
 };
