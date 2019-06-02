@@ -139,8 +139,8 @@ users.oauth = function (mongoose) {
 
         // 拿code换取token，再换取用户信息
         const url = "https://github.com/login/oauth/access_token?client_id="
-            + config.clientId + "&client_secret="
-            + config.clientSecret + "&code="
+            + config.appLogin.github.clientId + "&client_secret="
+            + config.appLogin.github.clientSecret + "&code="
             + code;
         const options = {
             headers: {
@@ -174,8 +174,6 @@ users.oauth = function (mongoose) {
                 const user = bodyJson.login;
                 const name = bodyJson.name;
                 const email = bodyJson.email;
-
-                console.log(bodyJson);
 
                 if(!user || !email) {
                     res.json({status: 1,msg: "未获取到用户信息"});
