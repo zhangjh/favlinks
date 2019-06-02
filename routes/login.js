@@ -62,7 +62,7 @@ users.login = function (mongoose) {
                 if(passwd === resu[0].passwd){
                     //登录成功
                     setSession(req,{
-                        user: user + "",
+                        user: user,
                         isLogin: true
                     });
                     res.json({status: 0,msg: "登录成功."});
@@ -89,7 +89,7 @@ users.signup = function (mongoose) {
             }else {
                 mongoose.insert("user",{user: user,passwd: encPasswd,email: email},function () {
                     setSession(req,{
-                        user: user + "",
+                        user: user,
                         isLogin: true
                     });
                     clearCookie(res);
@@ -251,7 +251,12 @@ let clearCookie = function (res) {
 let setSession = function (req, session) {
     console.info("session:");
     console.info(session);
-    req.session = session;
+    for (let key in session) {
+        if(session[key]){
+            // 注入字符串
+            req.session[key] = session[key] + "";
+        }
+    }
 };
 
 /** 第三方登录成功后的处理
@@ -269,7 +274,7 @@ let afterLogin = function (req, res, mongoose, userInfo) {
         }
 
         setSession(req,{
-            user: userInfo.user + "",
+            user: userInfo.user,
             isLogin: true
         });
 
