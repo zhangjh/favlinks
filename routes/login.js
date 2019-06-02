@@ -61,8 +61,10 @@ users.login = function (mongoose) {
             if(resu.length){
                 if(passwd === resu[0].passwd){
                     //登录成功
-                    req.session.user = user;
-                    req.session.isLogin = true;
+                    setSession(req,{
+                        user: user + "",
+                        isLogin: true
+                    });
                     res.json({status: 0,msg: "登录成功."});
                 }else {
                     res.json({status: 1,msg: "密码错误！"});
@@ -86,8 +88,10 @@ users.signup = function (mongoose) {
                 res.json({status:1,msg:"用户名已经被注册!"});
             }else {
                 mongoose.insert("user",{user: user,passwd: encPasswd,email: email},function () {
-                    req.session.user = user;
-                    req.session.isLogin = true;
+                    setSession(req,{
+                        user: user + "",
+                        isLogin: true
+                    });
                     clearCookie(res);
                     res.json({status: 0,msg:"注册成功！"});
                 });
@@ -244,6 +248,10 @@ let clearCookie = function (res) {
     res.clearCookie("isLogin", {});
 };
 
+let setSession = function (req, session) {
+    req.session = session;
+};
+
 /** 第三方登录成功后的处理
  * @param req
  * @param res
@@ -257,8 +265,11 @@ let afterLogin = function (req, res, mongoose, userInfo) {
                 console.info("注册成功");
             });
         }
-        req.session.user = userInfo.user;
-        req.session.isLogin = true;
+
+        setSession(req,{
+            user: userInfo.user + "",
+            isLogin: true
+        });
 
         clearCookie(res);
 
