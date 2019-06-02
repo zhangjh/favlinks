@@ -88,8 +88,7 @@ users.signup = function (mongoose) {
                 mongoose.insert("user",{user: user,passwd: encPasswd,email: email},function () {
                     req.session.user = user;
                     req.session.isLogin = true;
-                    res.clearCookie("user",{});
-
+                    clearCookie(res);
                     res.json({status: 0,msg:"注册成功！"});
                 });
             }
@@ -101,7 +100,7 @@ users.logout = function () {
     return function (req,res) {
         //清除session,cookie
         req.session.destroy(function () {
-            res.clearCookie("user",{});
+            clearCookie(res);
             res.cookie("isLogin","false");
             res.redirect("/");
         });
@@ -239,6 +238,12 @@ users.wbRedirect = function (mongoose) {
     }
 };
 
+let clearCookie = function (res) {
+    res.clearCookie("user", {});
+    res.clearCookie("name", {});
+    res.clearCookie("isLogin", {});
+};
+
 /** 第三方登录成功后的处理
  * @param req
  * @param res
@@ -254,7 +259,8 @@ let afterLogin = function (req, res, mongoose, userInfo) {
         }
         req.session.user = userInfo.user;
         req.session.isLogin = true;
-        res.clearCookie("user",{});
+
+        clearCookie(res);
 
         // 操作写入cookie
         let expires = new Date();

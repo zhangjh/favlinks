@@ -29,8 +29,7 @@ routes.index = function(mongoose){
             findPattern = {user: sessionUser};
         }else {
             console.info("登录信息不匹配");
-            res.clearCookie("user",{});
-            res.cookie("isLogin","false");
+            clearCookie(res);
         }
         //找出用户定义的网址，否则展示默认的
         mongoose.find("links",findPattern,function(ret){
@@ -247,11 +246,16 @@ routes.export = function (mongoose) {
                 }
             });
         }else {
-            res.clearCookie("user",{});
-            res.cookie("isLogin","false");
+            clearCookie(res);
             res.json({status: 1,msg: "Access Denied！请检查是否登录."});
         }
     }
+};
+
+let clearCookie = function (res) {
+    res.clearCookie("user", {});
+    res.clearCookie("name", {});
+    res.clearCookie("isLogin", {});
 };
 
 module.exports = routes;
