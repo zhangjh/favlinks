@@ -27,6 +27,9 @@ routes.index = function(mongoose){
         //防止伪造cookie登录
         console.info("cookieUser: " + cookieUser);
         console.info("sessionUser: " + sessionUser);
+        console.info(typeof cookieUser);
+        console.info(typeof sessionUser);
+        console.info(cookieUser === sessionUser);
         if(cookieUser === sessionUser){
             findPattern = {user: sessionUser};
         }else {
