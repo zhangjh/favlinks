@@ -52,6 +52,7 @@ $("#loginBtn").on("click",function () {
                 let expires = new Date();
                 expires.setTime(expires.getTime() + 14*24*60*60*1000);
                 document.cookie = "user=" + encodeURIComponent(user) + ";expires=" + expires.toGMTString();
+                document.cookie = "name=" + encodeURIComponent(user) + ";expires=" + expires.toGMTString();
                 document.cookie = "isLogin=true;expires=" + expires.toGMTString();
                 window.location.reload();
             }else {
