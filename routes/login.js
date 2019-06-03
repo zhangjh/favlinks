@@ -184,7 +184,7 @@ users.oauth = function (mongoose) {
                 }
 
                 afterLogin(req, res, mongoose, {
-                    user: encodeURIComponent(user), name, email, body
+			user: encodeURIComponent(user), name, email, data: body, userType: "github"
                 });
             });
         });
@@ -234,7 +234,7 @@ users.wbRedirect = function (mongoose) {
                     const email = "";
 
                     afterLogin(req, res, mongoose, {
-                        user, name, email, body
+                        user, name, email, data:body,userType:  "wb"
                     });
                 });
             });
