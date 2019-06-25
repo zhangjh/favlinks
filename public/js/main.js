@@ -70,14 +70,14 @@ const common = (function ($) {
       }
     });
     $("#goTop").click(function () {
-      $("body").animate({
+      $("html,body").animate({
         scrollTop: 0
       }, 400);
     });
   };
 
   const goBottom = function () {
-    $("body").animate({
+    $("html,body").animate({
       scrollTop: document.body.scrollHeight
     }, 1000);
   };
