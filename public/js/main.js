@@ -550,6 +550,14 @@ const notice = function () {
 	//notie.alert(4,"大侠请放心，您保存在此的数据永远不会丢失，即使哪天网站运行不下去了，数据一样可以导出。新上线导出功能可以试试哦~",3);
 };
 
+const adjustAds = function () {
+	let imgPath = "//favlink.cn/img/banner_728x90.png";
+	if(document.body.clientWidth < document.body.clientHeight) {
+		imgPath = "//favlink.cn/img/banner_300x250.png";
+	}
+	$("img#banner").attr("src", imgPath);
+};
+
 //Main
 (function () {
   // http => https, debug模式关闭
@@ -581,6 +589,7 @@ const notice = function () {
   common.goTop();
 
   notice();
+  adjustAds();
 })();
 
 //彩蛋
