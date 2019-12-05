@@ -72,7 +72,7 @@ a.nounderline:active {
   /*border: 1px solid #e8e8e8;*/
   margin: 40px auto 20px auto;
   max-width: 1300px;
-  min-height: 720px;
+  /*min-height: 720px;*/
 }
 
 .groupWrap {

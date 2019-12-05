@@ -548,13 +548,15 @@ const links = (function ($) {
 const notice = function () {
   //notie.alert(1,"最近HTTPS证书过期了，网站被Chrome标记为不安全，我暂时还没时间处理，请大家放心，站点不是被黑了...另外随着用户变多了，UI有必要美化美化，后面我会升级一下，敬请期待",5);
 	//notie.alert(4,"大侠请放心，您保存在此的数据永远不会丢失，即使哪天网站运行不下去了，数据一样可以导出。新上线导出功能可以试试哦~",3);
+	//notie.alert(4,"我太难了o(╥﹏╥)o 最近GFW发威，这几天我的VPS实例已经换了快有五六台了，每次坚挺不到几个小时就又跪了。。建议大家着急使用的尽量导出备份一下以免小站在被封的时候影响了使用",5);
 };
 
 const adjustAds = function () {
 	let imgPath = "//favlink.cn/img/banner_728x90.png";
-	if(document.body.clientWidth < document.body.clientHeight) {
+	if(common.isMobile()) {
 		imgPath = "//favlink.cn/img/banner_300x250.png";
 	}
+
 	$("img#banner").attr("src", imgPath);
 };
 
