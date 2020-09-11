@@ -10,6 +10,7 @@ const routes = require('./routes/index');
 const users = require('./routes/login');
 const stat = require('./routes/stat');
 const invest = require('./routes/invest');
+const other = require('./routes/other');
 
 const mongoose = require("./lib/mongoose");
 const compression = require('compression');
@@ -64,6 +65,10 @@ app.get('/investSelect',invest.select(mongoose));
 app.get('/investUpdate',invest.update(mongoose));
 app.get('/getSumInfo',invest.getSumInfo(mongoose));
 app.get('/getInput',invest.getInput(mongoose));
+
+// 舔狗中介
+app.get("/tiangou", other.getTiangou());
+app.get("/getWuwuwu", other.getWuwuwu());
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
