@@ -64,20 +64,20 @@ routes.add = function (mongoose) {
             findPattern.user = user;
             data.user = user;
             if(!data){
-                res.json({status:1,msg:"Error: no data given."});
+                return res.json({status:1,msg:"Error: no data given."});
             }
             mongoose.find(collection,findPattern,function (resu) {
                 if(!resu.length){
                     //当前没有则插入
                     mongoose.insert(collection,data,function (ret) {
-                        res.json({status: 0,msg: ret});
+                        return res.json({status: 0,msg: ret});
                     });
                 }else {
-                    res.json({status: 1,msg: "记录已经存在，请勿重复插入！"});
+                    return res.json({status: 1,msg: "记录已经存在，请勿重复插入！"});
                 }
             });
         }else {
-            res.json({status: 1,msg: "Access Denied！请检查是否登录."});
+            return res.json({status: 1,msg: "Access Denied！请检查是否登录."});
         }
     };
 };
@@ -92,15 +92,15 @@ routes.update = function (mongoose) {
             findPattern.user = user;
             mongoose.find(collection,findPattern,function (resu) {
                 if(!resu.length){
-                    res.json({status:1,msg:"Error: no data to update."});
+                    return res.json({status:1,msg:"Error: no data to update."});
                 }else {
                     mongoose.update(collection,findPattern,data,{multi:true},function (ret) {
-                        res.json({status: 0,msg: ret});
+                        return res.json({status: 0,msg: ret});
                     });
                 }
             });
         }else {
-            res.json({status: 1,msg: "Access Denied！请检查是否登录."});
+            return res.json({status: 1,msg: "Access Denied！请检查是否登录."});
         }
     };
 };
@@ -114,15 +114,15 @@ routes.remove  = function (mongoose) {
           const findPattern = {user: user};
           mongoose.find(collection,findPattern,function (resu) {
               if(!resu.length){
-                  res.json({status:1,msg:"Error: no data to remove."});
+                  return res.json({status:1,msg:"Error: no data to remove."});
               }else {
                   mongoose.remove(collection,data,function (ret) {
-                      res.json({status: 0,msg: ret});
+                      return res.json({status: 0,msg: ret});
                   });
               }
           });
       }else {
-          res.json({status: 1,msg: "Access Denied！请检查是否登录."});
+          return res.json({status: 1,msg: "Access Denied！请检查是否登录."});
       }
   }
 };
@@ -133,7 +133,7 @@ routes.select = function (mongoose) {
           findPattern = req.query.findPattern;
       if(collection){
           mongoose.find(collection,findPattern,function (resu) {
-              res.json({status:0,data:resu});
+              return res.json({status:0,data:resu});
           });
       }
   }
@@ -159,7 +159,7 @@ routes.copy = function (mongoose) {
                     mongoose.insert(collection,tem,function (e) {
                         retu.push(e);
                         if(retu.length === resu.length){
-                            res.json({status:0,msg:"copy succ"});
+                            return res.json({status:0,msg:"copy succ"});
                         }
                     });
                     tem = {};
@@ -236,18 +236,18 @@ routes.export = function (mongoose) {
                     const filePath = 'public/export/' + sessionUser + "_导出.html";
                     fs.writeFile(process.cwd() + "/" + filePath,html,function (err) {
                         if(err){
-                            res.json({status: 1,msg: err});
+                            return res.json({status: 1,msg: err});
                         }else {
                             res.download(filePath);
                         }
                     });
                 }else {
-                    res.json({status: 1,msg: "导出失败，内容为空"});
+                    return res.json({status: 1,msg: "导出失败，内容为空"});
                 }
             });
         }else {
             clearCookie(res);
-            res.json({status: 1,msg: "Access Denied！请检查是否登录."});
+            return res.json({status: 1,msg: "Access Denied！请检查是否登录."});
         }
     }
 };
