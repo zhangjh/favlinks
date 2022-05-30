@@ -6,7 +6,7 @@ if [[ "X$1" == "X" ]];then
 fi
 
 ##1. 查找服务进程杀之
-pid=`netstat -nap | grep 3000 | awk '{print $7}' | cut -d '/' -f 1`
+pid=`netstat -na | grep 3000 | awk '{print $7}' | cut -d '/' -f 1`
 if [ "X${pid}" != "X" ];then
 	kill -9 ${pid}
 fi

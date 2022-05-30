@@ -26,10 +26,10 @@ gulp.task('css',["clean"],function(){
 gulp.task('js',['clean'],function(){
     return gulp.src('public/js/*.js')
         .pipe(babel())
-        .pipe(gulpif(!debug, plugins.uglify().on('error',function (err) {
-            console.error(err);
-            this.emit('end');
-        })))
+        // .pipe(gulpif(!debug, plugins.uglify().on('error',function (err) {
+        //     console.error(err);
+        //     this.emit('end');
+        // })))
         .pipe(plugins.rename({suffix:'.min'}))
         .pipe(gulp.dest('public/js/'));
 });

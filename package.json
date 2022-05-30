@@ -18,8 +18,7 @@
     "ejs": "2.6.1",
     "express": "~4.13.1",
     "express-session": "~1.13.0",
-    "extract-text-webpack-plugin": "^3.0.2",
-    "gulp": "^3.9.1",
+    "gulp": "3.9.1",
     "gulp-clean": "^0.3.2",
     "gulp-load-plugins": "^1.4.0",
     "gulp-minify-css": "^1.2.4",
@@ -34,8 +33,7 @@
     "request": "^2.88.0",
     "serve-favicon": "~2.3.0",
     "style-loader": "^0.23.1",
-    "supervisor": "~0.10.0",
-    "webpack": "^4.28.4"
+    "supervisor": "~0.10.0"
   },
   "description": "个性化网址收藏导航",
   "main": "app.js",
@@ -56,7 +54,6 @@
     "@babel/core": "^7.4.3",
     "@babel/preset-env": "^7.4.3",
     "gulp-babel": "^8.0.0-beta.2",
-    "gulp-if": "^2.0.2",
-    "webpack-cli": "^3.2.1"
+    "gulp-if": "^2.0.2"
   }
 }

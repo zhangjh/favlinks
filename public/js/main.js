@@ -4,7 +4,7 @@
 
 const common = (function ($) {
   // 全局的debug开关
-  const debug = false;
+  const debug = true;
 
   //返回指定key的cookie值
   const getCookie = function (key) {
@@ -15,6 +15,13 @@ const common = (function ($) {
       }
     }
   };
+
+  const handleUrl = function (url) {
+    if(url && !/^http/.test(url) && !/\/\//.test(url)) {
+      return "//" + url;
+    }
+    return url;
+  }
 
   //事件监听器
   const Listener = function (ele, ev, fn) {
@@ -101,6 +108,7 @@ const common = (function ($) {
     dbOperation: dbOperation,
     displayChange: displayChange,
     validCheck: validCheck,
+    handleUrl: handleUrl,
     goTop: goTop,
     goBottom: goBottom,
     isMobile: isMobile,
@@ -173,13 +181,14 @@ const page = (function ($) {
   const linkModify = function () {
     $("span.glyphicon.glyphicon-edit").click(function (e) {
       const that = e.target;
+
       $("#change").attr("linkName", $(this).prev().text().trim());
       if ($("#change").css("display") === "none") {
         $(this).parents(".links").unbind("mouseout");
         common.displayChange($(this), "block");
         //  信息回填
         db.find("links",{
-          group: common.strTrim($(that).parent().siblings(".group").children(".groupName").text()),
+          group: common.strTrim($(that).parent().parent().siblings(".group").children(".groupName").text()),
           linkName: $(that).prev().text().trim()
         },function (ret) {
           const data = ret[0];
@@ -187,9 +196,10 @@ const page = (function ($) {
           const linkName = data.linkName;
           $(".modal-body .url").val(url);
           $(".modal-body .link").val(linkName);
+          $(this).attr("data-id", ret[0]._id);
         });
       } else {
-        $(this).parents(".link").bind("mouseout");
+        $(this).parents(".link").bind("mouseleave");
         common.displayChange($(this), "none");
       }
 
@@ -204,9 +214,12 @@ const page = (function ($) {
             url = $("#updatePannel .url").val();
           let updateCondition = {};
 
-          if (url && !/^http/.test(url)) {
-            url = "//" + url;
+          if("默认" === common.strTrim($(that).parent().parent().siblings(".group").children(".groupName").text())) {
+            notie.alert(2, "默认组不允许修改", 2);
+            return false;
           }
+
+          url = common.handleUrl(url);
           if (!name && !url) {
             notie.alert(2, "请至少填写一项修改.", 2);
           } else {
@@ -214,7 +227,7 @@ const page = (function ($) {
             if (url) updateCondition.url = url;
             //更新数据库
             db.update("links", {
-              group: common.strTrim($(that).parent().siblings(".group").children(".groupName").text()),
+              group: common.strTrim($(that).parent().parent().siblings(".group").children(".groupName").text()),
               linkName: $(that).prev().text().trim()
             }, updateCondition, function () {
               $("#updatePannel").modal("hide");
@@ -229,21 +242,34 @@ const page = (function ($) {
       $("#remove").click(function () {
         if (!login.isLogin()) {
           notie.alert(2, "请先登录！", 2);
-          return;
         } else {
           //数据库删除数据
           db.remove("links",
               {},
               {linkName: $(this).parent().attr("linkName")},
               function () {
-            $("#change").hide();
-            $(that).parents(".links").remove();
-          },
+                    $("#change").hide();
+                    $(that).parents(".links").remove();
+                  },
               "删除成功");
         }
       });
+
+      e.stopPropagation();
     });
   };
+
+  const linkMove = function () {
+    $(".droppable").dad();
+
+    $(".droppable").on("dadDrop", function (e, targetElement) {
+
+      const eleId = targetElement.attr("data-id");
+      const targetGroup = common.strTrim($(e).parent().parent().siblings(".group").children(".groupName").text());;
+      console.log(eleId);
+      console.log(targetGroup);
+    });
+  };                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            33
 
   const updateGroup = function () {
     $(".groupName").click(function () {
@@ -337,6 +363,7 @@ const page = (function ($) {
     showLoginPannel: showLoginPannel,
     setUserName: setUserName,
     linkModify: linkModify,
+    linkMove: linkMove,
     updateGroup: updateGroup,
     deleteGroup: deleteGroup,
     adjustMobile: adjustMobile,
@@ -372,11 +399,11 @@ const group = (function ($) {
       });
     });
 
-    common.Listener(".removeGroupBtn", "mouseover", function () {
+    common.Listener(".removeGroupBtn", "mouseenter", function () {
       $(this).text("删除该组");
     });
 
-    common.Listener(".removeGroupBtn", "mouseout", function () {
+    common.Listener(".removeGroupBtn", "mouseleave", function () {
       $(this).text("");
     });
 
@@ -411,16 +438,16 @@ const group = (function ($) {
         } else {
           //页面插入组元素
           let insertHtml = "<div class='groupWrap'><div class='group'><span class='groupName'>" + addGroupName + "<button type='button' class='close'><span aria-hidden='true'>×</span> </button> </span><span class='glyphicon glyphicon-plus addGroupBtn' aria-hidden='true'></span></div>" +
-            "<div class='links addNewLinks'><span class='glyphicon glyphicon-plus' aria-hidden='true'></span><a href='javascript:;'><span class='linkName'>添加新链接</span></a></div></div>";
+            "<div class='draggable links addNewLinks'><span class='glyphicon glyphicon-plus' aria-hidden='true'></span><a href='javascript:;'><span class='linkName'>添加新链接</span></a></div></div>";
 
           $("#addNewGroupPopup").modal("hide");
           //增加事件
-          common.Listener(".addNewLinks", "mouseover");
-          common.Listener(".addNewLinks", "mouseout");
+          common.Listener(".addNewLinks", "mouseenter");
+          common.Listener(".addNewLinks", "mouseleave");
           common.Listener(".addNewLinks", "click");
 
-          common.Listener(".addGroupBtn", "mouseover");
-          common.Listener(".addGroupBtn", "mouseout");
+          common.Listener(".addGroupBtn", "mouseenter");
+          common.Listener(".addGroupBtn", "mouseleave");
           common.Listener(".addGroupBtn", "click");
 
           // 保存新组数据到数据库
@@ -445,29 +472,40 @@ const group = (function ($) {
 
 //链接相关操作
 const links = (function ($) {
-  const ev = function () {
-    //链接hover效果
-    common.Listener(".links", "mouseover", function () {
+  const editBtnShowFun = function (e) {
+    if(e.target === e.currentTarget) {
       $(this).css({
         boxShadow: "1px 1px 10px 1px lightblue"
         // fontSize: "larger"
       });
       const editBtn = $(this).find(".glyphicon-edit");
       editBtn.show();
-    });
-    common.Listener(".links", "mouseout", function () {
-      $(this).removeAttr("style");
-      const editBtn = $(this).find(".glyphicon-edit");
+    }
+  };
+
+  const editBtnHideFun = function (e) {
+    if(e.target === e.currentTarget) {
+      $(this).css({
+        boxShadow: "none",
+        fontSize: "normal"
+      });      const editBtn = $(this).find(".glyphicon-edit");
       editBtn.hide();
-    });
+    }
+  };
+
+  const ev = function () {
+    //链接hover效果
+    common.Listener(".links", "mouseenter", links.editBtnShowFun);
+
+    common.Listener(".links", "mouseleave", links.editBtnHideFun);
 
     //添加新链接
-    common.Listener(".addNewLinks", "mouseover", function () {
+    common.Listener(".addNewLinks", "mouseenter", function () {
       $(this).css({
         'box-shadow': "10px 5px 5px #888888"
       });
     });
-    common.Listener(".addNewLinks", "mouseout", function () {
+    common.Listener(".addNewLinks", "mouseleave", function () {
       $(this).css({
         'box-shadow': "none"
       });
@@ -496,30 +534,14 @@ const links = (function ($) {
       let name = $("#addNewLinkPopup .addNewLinksName").val(),
         url = $("#addNewLinkPopup .addNewLinksUrl").val();
       if (name && url) {
-        if (!/^http/.test(url)) {
-          url = "//" + url;
-        }
-        let insertHtml = "<div class='links'><a target='_blank' href='" + url + "'><span class='linkName'>" + name + "</span></a><span class='glyphicon glyphicon-edit' aria-hidden='true' style='display: none;'></span></div>";
+        url = common.handleUrl(url);
+        let insertHtml = "<div class='draggable links'><a target='_blank' href='" + url + "'><span class='linkName'>" + name + "</span></a><span class='glyphicon glyphicon-edit' aria-hidden='true' style='display: none;'></span></div>";
         let index = parseInt($(this).attr("index")) + 1;
 
         $("#addNewLinkPopup").modal('hide');
         //添加事件
-        common.Listener(".links", "mouseover", function () {
-          $(this).css({
-            boxShadow: "1px 1px 10px 1px lightblue",
-            fontSize: "larger"
-          });
-          const editBtn = $(this).find(".glyphicon-edit");
-          editBtn.show();
-        });
-        common.Listener(".links", "mouseout", function () {
-          $(this).css({
-            boxShadow: "none",
-            fontSize: "normal"
-          });
-          const editBtn = $(this).find(".glyphicon-edit");
-          editBtn.hide();
-        });
+        common.Listener(".links", "mouseenter", links.editBtnShowFun);
+        common.Listener(".links", "mouseleave", links.editBtnHideFun);
 
         // 存到数据库，读取用户信息，存到对应的数据库表
         const groupName = common.strTrim($(".addNewLinks[index=" + (index - 1) + "]").siblings(".group").children(".groupName").text());
@@ -540,7 +562,9 @@ const links = (function ($) {
     });
   };
   return {
-    ev: ev
+    ev: ev,
+    editBtnShowFun: editBtnShowFun,
+    editBtnHideFun: editBtnHideFun
   };
 })(jQuery);
 
@@ -552,7 +576,7 @@ const notice = function () {
 };
 
 const adjustAds = function () {
-	let imgPath = "//favlink.cn/img/banner_728x90.png";
+	let imgPath = "/img/banner_728x90.png";
 	if(common.isMobile()) {
 		imgPath = "//favlink.cn/img/banner_300x250.png";
 	}
@@ -586,6 +610,8 @@ const adjustAds = function () {
   page.adjustMobile();
   //page.asideImgHover();
   page.wxDisplay();
+
+  page.linkMove();
 
   //goTop
   common.goTop();
