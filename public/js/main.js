@@ -16,6 +16,14 @@ const common = (function ($) {
     }
   };
 
+  // 给url添加//前缀
+  const handleUrl = function (url) {
+    if(url && !/^http/.test(url) && !/\/\//.test(url)) {
+      url = "//" + url;
+    }
+    return url;
+  };
+
   //事件监听器
   const Listener = function (ele, ev, fn) {
     $(ele).on(ev, fn);
@@ -97,6 +105,7 @@ const common = (function ($) {
   return {
     debug: debug,
     getCookie: getCookie,
+    handleUrl: handleUrl,
     Listener: Listener,
     dbOperation: dbOperation,
     displayChange: displayChange,
@@ -205,9 +214,7 @@ const page = (function ($) {
             url = $("#updatePannel .url").val();
           let updateCondition = {};
 
-          if (url && !/^http/.test(url)) {
-            url = "//" + url;
-          }
+          url = common.handleUrl(url);
           if (!name && !url) {
             notie.alert(2, "请至少填写一项修改.", 2);
           } else {
@@ -218,10 +225,12 @@ const page = (function ($) {
               group: common.strTrim($(that).parent().parent().siblings(".group").children(".groupName").text()),
               linkName: $(that).prev().text().trim()
             }, updateCondition, function () {
+              notie.alert(1, "更新成功", 2);
               $("#updatePannel").modal("hide");
+              $("#change").hide();
               if (name) $(that).prev().children("span.linkName").text(name);
               if (url) $(that).prev().attr("href", url);
-            }, "更新成功");
+            }, "");
           }
         });
       });
@@ -290,7 +299,8 @@ const page = (function ($) {
             // 更新数据库
             db.update("links", {group: oriGroup}, {group: newGroup}, function () {
               if (newGroup) that.text(newGroup);
-            }, "更新成功");
+              notie.alert(1, "更新成功", 2);
+            }, "");
           } else {
             notie.alert(2, "请填写组名！", 2);
           }
@@ -526,9 +536,7 @@ const links = (function ($) {
       let name = $("#addNewLinkPopup .addNewLinksName").val(),
         url = $("#addNewLinkPopup .addNewLinksUrl").val();
       if (name && url) {
-        if (!/^http/.test(url)) {
-          url = "//" + url;
-        }
+        url = common.handleUrl(url);
         let insertHtml = "<div class='links'><a target='_blank' href='" + url + "'><span class='linkName'>" + name + "</span></a><span class='glyphicon glyphicon-edit' aria-hidden='true' style='display: none;'></span></div>";
         let index = parseInt($(this).attr("index")) + 1;
 
