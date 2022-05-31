@@ -41,7 +41,6 @@
 <div class="content">
    <div class="container-fluid">
         <div class="contentwrap">
-
             <div class="group" style="border: none;background: none;margin: 5px 0 10px;">
                 <div style="position: absolute;top: 5px;right: 100px;" id="addGroup">
                     <a href="javascript:;">添加新组</a>
@@ -58,6 +57,14 @@
             %>
                     <div class="groupWrap">
                         <div class="group">
+                            <svg t="1653988430945"
+                                 data-toggle="collapse" href="#collapse-<%= group %>"
+                                 aria-expanded="true" aria-controls="collapse-<%= group %>"
+                                 class="icon"
+                                 viewBox="0 0 1024 1024"
+                                 version="1.1"
+                                 xmlns="http://www.w3.org/2000/svg" p-id="3790" width="32" height="32"><path d="M550.4 793.6L490.666667 853.333333l-59.733334-59.733333L256 618.666667l59.733333-59.733334 174.933334 174.933334 174.933333-174.933334 59.733333 59.733334-174.933333 174.933333zM490.666667 332.8l-174.933334 174.933333L256 448l174.933333-174.933333L490.666667 213.333333l59.733333 59.733334 174.933333 174.933333-59.733333 59.733333-174.933333-174.933333z" fill="#444444" p-id="3791"></path>
+                            </svg>
                             <span class="groupName">
                                 <%= group %>
 <!--                                <button type="button" class="close">-->
@@ -66,7 +73,7 @@
                             </span>
                             <span class="glyphicon glyphicon-remove removeGroupBtn" aria-hidden="true"></span>
                         </div>
-                        <div class="draggable-container">
+                        <div class="draggable-container collapse in" id="collapse-<%= group %>">
             <%
                         for(var j in ret){
                             var subGroup = ret[j].group,

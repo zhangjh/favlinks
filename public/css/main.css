@@ -89,6 +89,10 @@ a.nounderline:active {
   position: relative;
 }
 
+.group svg {
+  margin-top: 4px;
+}
+
 .group span {
   color: #266da1;
   font-size: 1.5em;
@@ -104,6 +108,7 @@ div.links {
   left:10px;
   font-weight: bold;
   cursor: pointer;
+  margin: 0 0 0 20px;
 }
 
 .addGroupBtn, .removeGroupBtn {
