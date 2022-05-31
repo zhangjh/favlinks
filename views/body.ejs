@@ -66,6 +66,7 @@
                             </span>
                             <span class="glyphicon glyphicon-remove removeGroupBtn" aria-hidden="true"></span>
                         </div>
+                        <div class="draggable-container">
             <%
                         for(var j in ret){
                             var subGroup = ret[j].group,
@@ -77,10 +78,10 @@
                             if(!/^http/.test(url)){
                                 url = "//" + url;
                             }*/
-                            if(subGroup == group){
+                            if(subGroup === group){
                                 if(linkName){
                         %>
-                                <div class="links">
+                                <div class="links draggable">
                                     <a href="<%= url %>" target="_blank">
                                         <span class="linkName"><%= linkName %></span>
                                     </a>
@@ -91,11 +92,12 @@
                             }
                         }
                         %>
-                        <div class="links addNewLinks" index="<%= i %>">
-                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                            <a href="javascript:;">
-                                <span class="linkName" domdot="addLink">添加新链接</span>
-                            </a>
+                            <div class="links addNewLinks" index="<%= i %>">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                <a href="javascript:;">
+                                    <span class="linkName" domdot="addLink">添加新链接</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                         <%

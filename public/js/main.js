@@ -179,7 +179,7 @@ const page = (function ($) {
         common.displayChange($(this), "block");
         //  信息回填
         db.find("links",{
-          group: common.strTrim($(that).parent().siblings(".group").children(".groupName").text()),
+          group: common.strTrim($(that).parent().parent().siblings(".group").children(".groupName").text()),
           linkName: $(that).prev().text().trim()
         },function (ret) {
           const data = ret[0];
@@ -187,6 +187,7 @@ const page = (function ($) {
           const linkName = data.linkName;
           $(".modal-body .url").val(url);
           $(".modal-body .link").val(linkName);
+          $(that).parent().attr("data-id", data._id);
         });
       } else {
         $(this).parents(".link").bind("mouseout");
@@ -214,7 +215,7 @@ const page = (function ($) {
             if (url) updateCondition.url = url;
             //更新数据库
             db.update("links", {
-              group: common.strTrim($(that).parent().siblings(".group").children(".groupName").text()),
+              group: common.strTrim($(that).parent().parent().siblings(".group").children(".groupName").text()),
               linkName: $(that).prev().text().trim()
             }, updateCondition, function () {
               $("#updatePannel").modal("hide");
@@ -243,6 +244,34 @@ const page = (function ($) {
         }
       });
     });
+  };
+
+  const linkDrag = function () {
+    $(".draggable-container").dad({
+      draggable: ".draggable"
+    });
+
+    let oriGroup;
+    $(".draggable-container").on("dadDragStart", function (e, target) {
+      oriGroup = common.strTrim($(target).parent().siblings(".group").children(".groupName").text());
+    });
+
+    // e: draggable-container, droppedElement: link
+    $(".draggable-container").on("dadDrop", function (e, droppedElement) {
+      const newGroup = common.strTrim($(droppedElement).parent().siblings(".group").children(".groupName").text());
+
+      const id = $(e.target).attr("data-id");
+      let findPattern;
+      if(id) {
+        findPattern = {_id: id};
+      } else {
+        findPattern = {linkName: $(droppedElement).find(".linkName").text()};
+      }
+      db.update("links", findPattern, {group: newGroup}, function () {
+        notie.alert(1, "更新成功", 2);
+      }, "");
+    });
+
   };
 
   const updateGroup = function () {
@@ -337,6 +366,7 @@ const page = (function ($) {
     showLoginPannel: showLoginPannel,
     setUserName: setUserName,
     linkModify: linkModify,
+    linkDrag: linkDrag,
     updateGroup: updateGroup,
     deleteGroup: deleteGroup,
     adjustMobile: adjustMobile,
@@ -522,7 +552,7 @@ const links = (function ($) {
         });
 
         // 存到数据库，读取用户信息，存到对应的数据库表
-        const groupName = common.strTrim($(".addNewLinks[index=" + (index - 1) + "]").siblings(".group").children(".groupName").text());
+        const groupName = common.strTrim($(".addNewLinks[index=" + (index - 1) + "]").parent().siblings(".group").children(".groupName").text());
         db.add("links",
             {group: groupName, linkName: name},
             {group: groupName, linkName: name, url: url},
@@ -581,6 +611,7 @@ const adjustAds = function () {
 
   //page
   page.linkModify();
+  page.linkDrag();
   page.updateGroup();
   page.deleteGroup();
   page.adjustMobile();
