@@ -269,6 +269,9 @@ const page = (function ($) {
     $(".draggable-container").on("dadDrop", function (e, droppedElement) {
       const newGroup = common.strTrim($(droppedElement).parent().siblings(".group").children(".groupName").text());
 
+      if(newGroup === oriGroup) {
+        return false;
+      }
       const id = $(e.target).attr("data-id");
       let findPattern;
       if(id) {
