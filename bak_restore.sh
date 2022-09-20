@@ -9,10 +9,10 @@ if [ "X$MODE" == "X" ];then
 fi
 
 PATH_PRE="/mnt/nas/dev"
-MONGO_DIR="/mongodb"
+MONGO_DIR="${PATH_PRE}/mongodb"
 DB_NAME="favlinks"
 DB_PORT="20172"
-BAK_BASE="/back/favlinks"
+BAK_BASE="${PATH_PRE}/back/favlinks"
 CURTIME=`date +%Y%m%d`
 BAK_NAME=${BAK_BASE}${CURTIME}
 
@@ -30,6 +30,10 @@ fi
 
 if [ "$MODE" == "restore" ];then
   echo "开始恢复..."
+  if [ "$DB_PATH" == "" ];then
+    echo "待恢复db路径未传递"
+    exit 1
+  fi
   cd ${MONGO_DIR}/bin
   ./mongorestore --port ${DB_PORT} -d ${DB_NAME} ${DB_PATH}
   if [ $? -ne 0 ];then
