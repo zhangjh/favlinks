@@ -563,11 +563,11 @@ const adjustAds = function () {
 //Main
 (function () {
   // http => https, debug模式关闭
-  if(!common.debug){
-      if (window.location.protocol === "http:") {
-          window.location.href = "https://favlink.cn";
-      }
-  }
+  //if(!common.debug){
+  //    if (window.location.protocol === "http:") {
+  //        window.location.href = "https://favlink.cn";
+  //    }
+  //}
 
   //login
   login.showLoginPannel();
