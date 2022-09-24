@@ -1,9 +1,10 @@
-FROM njhxzhangjh/web_base:2.0
+FROM node:10.24.1
 
-WORKDIR /root/web/favlinks
-
-COPY ./ /root/web/favlinks
+WORKDIR /favlinks
+COPY ./ /favlinks
 
 ## comment
-RUN cd /root/web/favlinks
-RUN npm run start 
+RUN npm i 
+EXPOSE 3000
+
+CMD ["npm", "run", "start"]
