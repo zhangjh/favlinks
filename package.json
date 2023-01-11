@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "gulp html",
-    "start": "node ./bin/www",
+    "build": "gulp default",
+    "start": "gulp default && node ./bin/www",
     "dev": "webpack"
   },
   "dependencies": {
