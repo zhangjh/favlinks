@@ -16,6 +16,14 @@ const common = (function ($) {
     }
   };
 
+  // 给url添加//前缀
+  const handleUrl = function (url) {
+    if(url && !/^http/.test(url) && !/\/\//.test(url)) {
+      url = "//" + url;
+    }
+    return url;
+  };
+
   //事件监听器
   const Listener = function (ele, ev, fn) {
     $(ele).on(ev, fn);
@@ -97,6 +105,7 @@ const common = (function ($) {
   return {
     debug: debug,
     getCookie: getCookie,
+    handleUrl: handleUrl,
     Listener: Listener,
     dbOperation: dbOperation,
     displayChange: displayChange,
@@ -179,7 +188,7 @@ const page = (function ($) {
         common.displayChange($(this), "block");
         //  信息回填
         db.find("links",{
-          group: common.strTrim($(that).parent().siblings(".group").children(".groupName").text()),
+          group: common.strTrim($(that).parent().parent().siblings(".group").children(".groupName").text()),
           linkName: $(that).prev().text().trim()
         },function (ret) {
           const data = ret[0];
@@ -187,6 +196,7 @@ const page = (function ($) {
           const linkName = data.linkName;
           $(".modal-body .url").val(url);
           $(".modal-body .link").val(linkName);
+          $(that).parent().attr("data-id", data._id);
         });
       } else {
         $(this).parents(".link").bind("mouseout");
@@ -204,9 +214,7 @@ const page = (function ($) {
             url = $("#updatePannel .url").val();
           let updateCondition = {};
 
-          if (url && !/^http/.test(url)) {
-            url = "//" + url;
-          }
+          url = common.handleUrl(url);
           if (!name && !url) {
             notie.alert(2, "请至少填写一项修改.", 2);
           } else {
@@ -214,13 +222,15 @@ const page = (function ($) {
             if (url) updateCondition.url = url;
             //更新数据库
             db.update("links", {
-              group: common.strTrim($(that).parent().siblings(".group").children(".groupName").text()),
+              group: common.strTrim($(that).parent().parent().siblings(".group").children(".groupName").text()),
               linkName: $(that).prev().text().trim()
             }, updateCondition, function () {
+              notie.alert(1, "更新成功", 2);
               $("#updatePannel").modal("hide");
+              $("#change").hide();
               if (name) $(that).prev().children("span.linkName").text(name);
               if (url) $(that).prev().attr("href", url);
-            }, "更新成功");
+            }, "");
           }
         });
       });
@@ -245,6 +255,37 @@ const page = (function ($) {
     });
   };
 
+  const linkDrag = function () {
+    $(".draggable-container").dad({
+      draggable: ".draggable"
+    });
+
+    let oriGroup;
+    $(".draggable-container").on("dadDragStart", function (e, target) {
+      oriGroup = common.strTrim($(target).parent().siblings(".group").children(".groupName").text());
+    });
+
+    // e: draggable-container, droppedElement: link
+    $(".draggable-container").on("dadDrop", function (e, droppedElement) {
+      const newGroup = common.strTrim($(droppedElement).parent().siblings(".group").children(".groupName").text());
+
+      if(newGroup === oriGroup) {
+        return false;
+      }
+      const id = $(e.target).attr("data-id");
+      let findPattern;
+      if(id) {
+        findPattern = {_id: id};
+      } else {
+        findPattern = {linkName: $(droppedElement).find(".linkName").text()};
+      }
+      db.update("links", findPattern, {group: newGroup}, function () {
+        notie.alert(1, "更新成功", 2);
+      }, "");
+    });
+
+  };
+
   const updateGroup = function () {
     $(".groupName").click(function () {
       if (!login.isLogin()) {
@@ -261,7 +302,8 @@ const page = (function ($) {
             // 更新数据库
             db.update("links", {group: oriGroup}, {group: newGroup}, function () {
               if (newGroup) that.text(newGroup);
-            }, "更新成功");
+              notie.alert(1, "更新成功", 2);
+            }, "");
           } else {
             notie.alert(2, "请填写组名！", 2);
           }
@@ -337,6 +379,7 @@ const page = (function ($) {
     showLoginPannel: showLoginPannel,
     setUserName: setUserName,
     linkModify: linkModify,
+    linkDrag: linkDrag,
     updateGroup: updateGroup,
     deleteGroup: deleteGroup,
     adjustMobile: adjustMobile,
@@ -496,9 +539,7 @@ const links = (function ($) {
       let name = $("#addNewLinkPopup .addNewLinksName").val(),
         url = $("#addNewLinkPopup .addNewLinksUrl").val();
       if (name && url) {
-        if (!/^http/.test(url)) {
-          url = "//" + url;
-        }
+        url = common.handleUrl(url);
         let insertHtml = "<div class='links'><a target='_blank' href='" + url + "'><span class='linkName'>" + name + "</span></a><span class='glyphicon glyphicon-edit' aria-hidden='true' style='display: none;'></span></div>";
         let index = parseInt($(this).attr("index")) + 1;
 
@@ -522,7 +563,7 @@ const links = (function ($) {
         });
 
         // 存到数据库，读取用户信息，存到对应的数据库表
-        const groupName = common.strTrim($(".addNewLinks[index=" + (index - 1) + "]").siblings(".group").children(".groupName").text());
+        const groupName = common.strTrim($(".addNewLinks[index=" + (index - 1) + "]").parent().siblings(".group").children(".groupName").text());
         db.add("links",
             {group: groupName, linkName: name},
             {group: groupName, linkName: name, url: url},
@@ -581,6 +622,7 @@ const adjustAds = function () {
 
   //page
   page.linkModify();
+  page.linkDrag();
   page.updateGroup();
   page.deleteGroup();
   page.adjustMobile();
