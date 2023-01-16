@@ -11,6 +11,7 @@ const users = require('./routes/login');
 const stat = require('./routes/stat');
 const invest = require('./routes/invest');
 const other = require('./routes/other');
+const pinyin = require('./routes/pycode');
 
 const mongoose = require("./lib/mongoose");
 const compression = require('compression');
@@ -69,6 +70,10 @@ app.get('/getInput',invest.getInput(mongoose));
 // 舔狗中介
 app.get("/tiangou", other.getTiangou());
 app.get("/getWuwuwu", other.getWuwuwu());
+
+// pinyin
+app.get("/py/generate", pinyin.generate());
+app.get("/py/select", pinyin.select())
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
