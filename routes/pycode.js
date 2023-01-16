@@ -33,11 +33,12 @@ pycode.generate = function (mongoose) {
 pycode.select = function (mongoose) {
   return function (req, res) {
     const code = req.query.code;
-    const findPattern = {
-      // admin:zhangjh
-      user: req.query.user,
-      passwd: req.query.passwd
-    };
+    const user = req.query.user;
+    const passwd = req.query.passwd;
+    if(user !== "admin" && passwd !== "zhangjh") {
+      return res.json("您没有权限");
+    }
+    const findPattern = {};
     if(code) {
       findPattern.code = code;
     }
