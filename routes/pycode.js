@@ -29,10 +29,18 @@ pycode.generate = function (mongoose) {
   }
 };
 
+// 后台代码
 pycode.select = function (mongoose) {
   return function (req, res) {
     const code = req.query.code;
-    const findPattern = {code};
+    const findPattern = {
+      // admin:zhangjh
+      user: req.query.user,
+      passwd: req.query.passwd
+    };
+    if(code) {
+      findPattern.code = code;
+    }
     mongoose.find("registeredCode", findPattern, function (result) {
       if(result[0]){
         res.json({status:0,data:result});
