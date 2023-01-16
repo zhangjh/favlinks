@@ -35,7 +35,8 @@ pycode.select = function (mongoose) {
     const code = req.query.code;
     const user = req.query.user;
     const passwd = req.query.passwd;
-    if(user !== "admin" && passwd !== "zhangjh") {
+    // 普通查询只允许查询具体code
+    if(!code && user !== "admin" && passwd !== "zhangjh") {
       return res.json("您没有权限");
     }
     const findPattern = {};
