@@ -53,4 +53,35 @@ pycode.select = function (mongoose) {
   }
 };
 
+pycode.update = function (mongoose) {
+  return function (req, res) {
+    const code = req.query.code;
+    const used = req.query.used;
+    const mac = req.query.mac;
+    const user = req.query.user;
+    if(!code) {
+      mongoose.find("registeredCode", {code}, function (result) {
+        if(result[0]) {
+          if(used) {
+            result[0].used = true;
+          }
+          if(mac) {
+            result[0].mac = mac;
+          }
+          if(user) {
+            result[0].user = user;
+          }
+          mongoose.update("registeredCode", result[0], function (ret) {
+            return res.json({status: 0, data: ret});
+          });
+        } else {
+          return res.json({status: 1, data: "查询结果多于一条"});
+        }
+      });
+    } else {
+      return res.json({status: 1, data: "code参数未传"});
+    }
+  };
+};
+
 module.exports = pycode;
