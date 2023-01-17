@@ -60,7 +60,7 @@ pycode.update = function (mongoose) {
     const mac = req.query.mac;
     const user = req.query.user;
     if(code) {
-      mongoose.update("registeredCode", {code}, {used: true, mac, user}, function (ret) {
+      mongoose.update("registeredCode", {code}, {used: used === 1, mac, user}, function (ret) {
         return res.json({status: 0, data: ret});
       });
     } else {
