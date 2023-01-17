@@ -71,6 +71,9 @@ pycode.update = function (mongoose) {
           if(user) {
             result[0].user = user;
           }
+          // 更新需要排除时间字段
+          delete result[0].gmtCreate;
+          delete result[0].gmtModified;
           mongoose.update("registeredCode", result[0], function (ret) {
             return res.json({status: 0, data: ret});
           });
