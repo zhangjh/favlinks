@@ -75,7 +75,8 @@ app.get("/getWuwuwu", other.getWuwuwu());
 
 // pinyin
 app.get("/py/generate", cors(), pinyin.generate(mongoose));
-app.get("/py/select", cors(), pinyin.select(mongoose))
+app.get("/py/select", cors(), pinyin.select(mongoose));
+app.get("/py/update", cors(), pinyin.update(mongoose));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
