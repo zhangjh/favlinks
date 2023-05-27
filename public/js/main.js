@@ -11,7 +11,7 @@ const common = (function ($) {
     const cookie = (document.cookie || "").split(";");
     for (let i in cookie) {
       // 匹配以key开头
-      if (new RegExp('^'+key).test(cookie[i])) {
+      if (new RegExp('^'+key).test(cookie[i].trim())) {
         return decodeURIComponent(cookie[i].split("=")[1]);
       }
     }
