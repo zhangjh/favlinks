@@ -5,8 +5,6 @@ const fs = require('fs');
 //更改操作时校验用户合法性
 function validUserCheck(req,user) {
     const sessionUser = req.session.user;
-    console.log("sessionUser: " + sessionUser);
-    console.log("user: " + user);
     return sessionUser === user;
 }
 
@@ -60,10 +58,6 @@ routes.add = function (mongoose) {
             findPattern = req.query.findPattern || {},
             data = req.query.data,
             user = req.query.user;
-        console.log("collection: " + collection);
-        console.log("findPattern: " + findPattern);
-        console.log("data: " + data);
-        console.log("reqUser: " + user);
         //用户校验
         if(validUserCheck(req,user)){
             findPattern.user = user;
