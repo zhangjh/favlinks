@@ -44,7 +44,7 @@ const common = (function ($) {
         }
       }
       if (ret.status !== 0) {
-        notie.alert(3, jsonParam.msg || ret.msg, 3);
+        notie.alert(3, ret.msg, 3);
       }
     });
   };
