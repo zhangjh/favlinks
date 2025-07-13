@@ -31,6 +31,7 @@ class FavLinks {
 
   async init() {
     this.bindEvents();
+    this.validateLogin();  // 初始化按钮状态
     await this.checkLoginStatus();
     await this.loadLinks();
   }
