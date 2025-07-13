@@ -1,32 +1,11 @@
 {
   "version": 2,
-  "builds": [
+  "buildCommand": "npm run build",
+  "outputDirectory": "client/dist",
+  "rewrites": [
     {
-      "src": "client/**",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "server/app.js",
-      "use": "@vercel/node"
+      "source": "/(api|login|logout|add|remove|update|export)(.*)",
+      "destination": "/api/index.js"
     }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/server/app.js"
-    },
-    {
-      "src": "/(login|logout|add|remove|update|export)",
-      "dest": "/server/app.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/client/$1"
-    }
-  ],
-  "functions": {
-    "server/app.js": {
-      "maxDuration": 30
-    }
-  }
+  ]
 }
