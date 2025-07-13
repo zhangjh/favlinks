@@ -97,7 +97,7 @@ class FavLinks {
     if (!userName || !passwd) return;
 
     try {
-      const response = await fetch('http://localhost:3000/login', {
+      const response = await fetch('/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -135,7 +135,7 @@ class FavLinks {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/signup', {
+      const response = await fetch('/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user: userName, passwd, email }),
@@ -171,7 +171,7 @@ class FavLinks {
 
   async handleLogout() {
     try {
-      await fetch('http://localhost:3000/logout', {
+      await fetch('/logout', {
         credentials: 'include'
       });
       // 清除本地cookie
@@ -211,7 +211,7 @@ class FavLinks {
     if (isLogin === 'true' && userName) {
       // 验证session是否有效
       try {
-        const response = await fetch('http://localhost:3000/api/session-check', {
+        const response = await fetch('/api/session-check', {
           credentials: 'include'
         });
         const result = await response.json();
@@ -241,7 +241,7 @@ class FavLinks {
     if (!groupName) return;
 
     try {
-      const response = await fetch('http://localhost:3000/add', {
+      const response = await fetch('/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -277,7 +277,7 @@ class FavLinks {
     if (this.isEditing) {
       // 编辑链接
       try {
-        const response = await fetch(`http://localhost:3000/api/links/${this.currentLinkId}`, {
+        const response = await fetch(`/api/links/${this.currentLinkId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
@@ -303,7 +303,7 @@ class FavLinks {
     } else {
       // 添加链接
       try {
-        const response = await fetch('http://localhost:3000/add', {
+        const response = await fetch('/add', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -337,7 +337,7 @@ class FavLinks {
 
   async loadLinks() {
     try {
-      const response = await fetch('http://localhost:3000/api/links', {
+      const response = await fetch('/api/links', {
         credentials: 'include'
       });
       const { groups } = await response.json();
@@ -445,7 +445,7 @@ class FavLinks {
     if (!confirm('确定要删除这个链接吗？')) return;
     
     try {
-      const response = await fetch(`http://localhost:3000/api/links/${linkId}`, {
+      const response = await fetch(`/api/links/${linkId}`, {
         method: 'DELETE',
         credentials: 'include'
       });
@@ -464,7 +464,7 @@ class FavLinks {
     if (!confirm(`删除组后，组内保存链接不可恢复，确认删除“${groupName}”组吗？`)) return;
     
     try {
-      const response = await fetch('http://localhost:3000/remove', {
+      const response = await fetch('/remove', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -502,7 +502,7 @@ class FavLinks {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/update', {
+      const response = await fetch('/update', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -530,7 +530,7 @@ class FavLinks {
 
   async exportLinks() {
     try {
-      const response = await fetch('http://localhost:3000/export', {
+      const response = await fetch('/export', {
         credentials: 'include'
       });
       
@@ -589,7 +589,7 @@ class FavLinks {
     if (sourceGroupName === targetGroupName) return;
     
     try {
-      const response = await fetch(`http://localhost:3000/api/links/${linkId}`, {
+      const response = await fetch(`/api/links/${linkId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

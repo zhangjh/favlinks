@@ -16,7 +16,7 @@ app.use(favicon(path.join(__dirname, '../client/img', 'favicon.ico')));
 
 app.use(compression());
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: process.env.NODE_ENV === 'production' ? true : 'http://localhost:5173',
   credentials: true
 }));
 app.use(express.json());
@@ -32,19 +32,104 @@ app.use(session({
 // 静态文件
 app.use(express.static(path.join(__dirname, '../client')));
 
-// 加密函数 - 保持与原项目一致
-function encrypt(str) {
-  const cipher = crypto.createCipher('aes192', config.session.secret);
+// 旧版本加密函数（模拟旧版本crypto.createCipher的实际实现）
+function encryptLegacy(str) {
+  // 旧版本createCipher使用EVP_BytesToKey进行密钥派生
+  const algorithm = 'aes192';
+  const password = config.session.secret;
+  
+  // 使用MD5进行密钥派生，模拟EVP_BytesToKey
+  const keySize = 24; // AES-192
+  const ivSize = 16;
+  const derived = evpBytesToKey(password, null, keySize, ivSize);
+  
+  const cipher = crypto.createCipheriv('aes-192-cbc', derived.key, derived.iv);
   let enc = cipher.update(str, 'utf8', 'hex');
   enc += cipher.final('hex');
   return enc;
 }
 
+// 模拟EVP_BytesToKey算法（旧版本crypto.createCipher使用的密钥派生方法）
+function evpBytesToKey(password, salt, keySize, ivSize) {
+  const d = [];
+  const dLen = keySize + ivSize;
+  let d_i = 0;
+  
+  while (d_i < dLen) {
+    const hash = crypto.createHash('md5');
+    if (d_i > 0) {
+      hash.update(d[d_i - 1]);
+    }
+    hash.update(password);
+    if (salt) {
+      hash.update(salt);
+    }
+    d[d_i] = hash.digest();
+    d_i++;
+  }
+  
+  const key = Buffer.concat(d).slice(0, keySize);
+  const iv = Buffer.concat(d).slice(keySize, keySize + ivSize);
+  
+  return { key, iv };
+}
+
+// 新版本加密函数
+function encrypt(str) {
+  const algorithm = 'aes-192-cbc';
+  const key = crypto.scryptSync(config.session.secret, 'salt', 24);
+  const iv = crypto.randomBytes(16);
+  
+  const cipher = crypto.createCipheriv(algorithm, key, iv);
+  let enc = cipher.update(str, 'utf8', 'hex');
+  enc += cipher.final('hex');
+  
+  return 'v2:' + iv.toString('hex') + ':' + enc;
+}
+
 function decrypt(str) {
-  const decipher = crypto.createDecipher('aes192', config.session.secret);
-  let dec = decipher.update(str,'hex','utf8');
+  const algorithm = 'aes-192-cbc';
+  const key = crypto.scryptSync(config.session.secret, 'salt', 24);
+  
+  const textParts = str.split(':');
+  const iv = Buffer.from(textParts.shift(), 'hex');
+  const encryptedText = textParts.join(':');
+  
+  const decipher = crypto.createDecipheriv(algorithm, key, iv);
+  let dec = decipher.update(encryptedText, 'hex', 'utf8');
   dec += decipher.final('utf8');
+  
   return dec;
+}
+
+// 验证密码（兼容新旧版本）
+function verifyPassword(inputPassword, storedPassword) {
+  try {
+    // 检查是否是新版本加密（有v2:前缀）
+    if (storedPassword.startsWith('v2:')) {
+      // 新版本：解密存储的密码并比较
+      try {
+        const encryptedPart = storedPassword.substring(3); // 移除v2:前缀
+        const decrypted = decrypt(encryptedPart);
+        return decrypted === inputPassword;
+      } catch (decryptError) {
+        console.error('新版本密码解密失败:', decryptError);
+        return false;
+      }
+    } else {
+      // 旧版本加密验证
+      const legacyEncrypted = encryptLegacy(inputPassword);
+      return legacyEncrypted === storedPassword;
+    }
+  } catch (error) {
+    console.error('密码验证失败:', error);
+    return false;
+  }
+}
+
+// 升级密码到新版本加密
+function upgradePassword(password) {
+  return encrypt(password);
 }
 
 function clearCookie(res) {
@@ -70,12 +155,19 @@ app.get('/', async (req, res) => {
 app.post('/login', async (req, res) => {
   const user = req.body.user;
   const rawPasswd = req.headers['x-requested-biz'];
-  const passwd = encrypt(rawPasswd);
   
   const { data: userData } = await db.getUser(user);
   
   if (userData) {
-    if (passwd === userData.passwd) {
+    // 使用兼容验证函数
+    if (verifyPassword(rawPasswd, userData.passwd)) {
+      // 如果是旧版本密码，升级到新版本
+      if (!userData.passwd.startsWith('v2:')) {
+        const newEncryptedPassword = upgradePassword(rawPasswd);
+        await db.updateUserPassword(user, newEncryptedPassword);
+        console.log(`用户 ${user} 的密码已升级到新版本加密`);
+      }
+      
       setSession(req, {
         user: user,
         isLogin: true
@@ -329,6 +421,12 @@ app.put('/api/links/:id', async (req, res) => {
   res.json({ success: true });
 });
 
-app.listen(config.server.port, () => {
-  console.log(`Server running on port ${config.server.port}`);
-});
+// 在本地开发时启动服务器
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(config.server.port, () => {
+    console.log(`Server running on port ${config.server.port}`);
+  });
+}
+
+// 为Vercel导出app
+export default app;

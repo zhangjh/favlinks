@@ -72,5 +72,15 @@ export const db = {
       .eq('username', username)
       .eq('groupname', oldGroupName);
     return { data, error };
+  },
+
+  async updateUserPassword(username, newPasswordHash) {
+    const { data, error } = await supabase
+      .from('users')
+      .update({ passwd: newPasswordHash })
+      .eq('username', username)
+      .select()
+      .single();
+    return { data, error };
   }
 };
