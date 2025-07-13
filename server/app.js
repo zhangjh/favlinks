@@ -190,7 +190,7 @@ app.post('/signup', async (req, res) => {
   } else {
     const { data } = await db.createUser({
       username: user,
-      password_hash: encPasswd,
+      passwd: encPasswd,
       email: email
     });
     

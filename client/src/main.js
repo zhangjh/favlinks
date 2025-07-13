@@ -59,7 +59,7 @@ class FavLinks {
     document.getElementById('cancelEditGroup').addEventListener('click', () => this.hideModal('editGroupModal'));
 
     // 输入验证
-    ['userName', 'passwd'].forEach(id => {
+    ['userName', 'passwd', 'email'].forEach(id => {
       document.getElementById(id).addEventListener('input', () => this.validateLogin());
     });
   }
@@ -79,15 +79,18 @@ class FavLinks {
   validateLogin() {
     const userName = document.getElementById('userName').value.trim();
     const passwd = document.getElementById('passwd').value.trim();
+    const email = document.getElementById('email').value.trim();
     const loginBtn = document.getElementById('loginBtn');
     const signupBtn = document.getElementById('signupBtn');
     
-    const isValid = userName && passwd;
-    loginBtn.disabled = !isValid;
-    signupBtn.disabled = !isValid;
+    const isValidLogin = userName && passwd;
+    const isValidSignup = userName && passwd && email;
     
-    loginBtn.classList.toggle('opacity-50', !isValid);
-    signupBtn.classList.toggle('opacity-50', !isValid);
+    loginBtn.disabled = !isValidLogin;
+    signupBtn.disabled = !isValidSignup;
+    
+    loginBtn.classList.toggle('opacity-50', !isValidLogin);
+    signupBtn.classList.toggle('opacity-50', !isValidSignup);
   }
 
   async handleLogin() {
