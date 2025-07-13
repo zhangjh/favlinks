@@ -611,3 +611,6 @@ class FavLinks {
 
 // 全局实例
 const favLinks = new FavLinks();
+
+// 将favLinks暴露为全局变量，供HTML中的onclick事件使用
+window.favLinks = favLinks;
