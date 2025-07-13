@@ -4,7 +4,7 @@
   "outputDirectory": "client/dist",
   "rewrites": [
     {
-      "source": "/(api|login|logout|add|remove|update|export)(.*)",
+      "source": "/(api|login|logout|add|remove|update|export|signup)(.*)",
       "destination": "/api/index.js"
     }
   ]
