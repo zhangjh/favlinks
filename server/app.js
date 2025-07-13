@@ -180,28 +180,51 @@ app.post('/login', async (req, res) => {
 
 // 注册接口
 app.post('/signup', async (req, res) => {
-  const { user, passwd, email } = req.body;
-  const encPasswd = encrypt(passwd);
-  
-  const { data: existUser } = await db.getUser(user);
-  
-  if (existUser) {
-    res.json({ status: 1, msg: "用户名已经被注册!" });
-  } else {
-    const { data } = await db.createUser({
+  try {
+    console.log('收到 /signup 请求，参数:', req.body);
+    const { user, passwd, email } = req.body;
+    
+    // 验证必要参数
+    if (!user || !passwd || !email) {
+      console.log('参数验证失败:', { user: !!user, passwd: !!passwd, email: !!email });
+      return res.json({ status: 1, msg: "用户名、密码和邮箱都不能为空！" });
+    }
+    
+    console.log('开始加密密码');
+    const encPasswd = encrypt(passwd);
+    console.log('密码加密完成');
+    
+    console.log('开始查询用户是否存在:', user);
+    const { data: existUser } = await db.getUser(user);
+    console.log('查询结果:', { existUser: !!existUser });
+    
+    if (existUser) {
+      console.log('用户已存在，返回错误');
+      return res.json({ status: 1, msg: "用户名已经被注册!" });
+    }
+    
+    console.log('开始创建用户:', { username: user, email: email });
+    const { data, error } = await db.createUser({
+      id: crypto.randomUUID(),
       username: user,
       passwd: encPasswd,
       email: email
     });
     
-    if (data) {
+    if (error) {
+      return res.json({ status: 1, msg: "注册失败：" + error.message });
+    } else if (data) {
       setSession(req, {
         user: user,
         isLogin: true
       });
       clearCookie(res);
-      res.json({ status: 0, msg: "注册成功！" });
+      return res.json({ status: 0, msg: "注册成功！" });
+    } else {
+      return res.json({ status: 1, msg: "注册失败：未知错误" });
     }
+  } catch (err) {
+    return res.status(500).json({ status: 1, msg: "服务器错误: " + err.message });
   }
 });
 
