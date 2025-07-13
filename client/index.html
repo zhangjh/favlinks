@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>favLinks--您的私人收藏夹 - 完全私人定制的网址收藏导航</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- Header -->
+  <header class="bg-white shadow-sm border-b">
+    <nav class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center">
+          <a href="/" class="flex items-center space-x-3">
+            <img id="logoPic" src="/img/logo.png" alt="brand" class="h-10">
+            <div class="flex flex-col">
+              <span class="text-xl font-bold text-blue-600">FavLinks</span>
+              <span class="text-xs text-gray-500">您的私人收藏夹</span>
+            </div>
+          </a>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span>您好，<span id="loginUser" class="font-medium">游客</span></span>
+          <button id="login" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">登录</button>
+          <a href="/logout" id="logout" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 hidden">退出</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    <!-- Controls -->
+    <div class="flex justify-end mb-6 space-x-4">
+      <button id="addGroup" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">添加新组</button>
+      <button onclick="favLinks.exportLinks()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">导出全部</button>
+    </div>
+
+    <!-- Groups Container -->
+    <div id="groups-container" class="space-y-6">
+      <!-- 动态内容 -->
+    </div>
+  </main>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white p-4 rounded-lg w-96 max-w-md mx-4">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold">注册登录</h2>
+        <button id="closeLogin" class="text-gray-500 hover:text-gray-700">&times;</button>
+      </div>
+      <p class="text-center text-gray-600 mb-4">请使用用户名密码登录，注册请填写用户名和邮箱</p>
+      <form id="loginForm">
+        <input type="text" id="userName" placeholder="用户名" class="w-full p-3 border rounded mb-3">
+        <input type="password" id="passwd" placeholder="密码" class="w-full p-3 border rounded mb-3">
+        <input type="email" id="email" placeholder="邮箱" class="w-full p-3 border rounded mb-4">
+        <div class="flex justify-center space-x-3">
+          <button type="button" id="signupBtn" class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600">注册</button>
+          <button type="button" id="loginBtn" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">登录</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Group Modal -->
+  <div id="addGroupModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white p-4 rounded-lg w-96 max-w-md mx-4">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold">添加新组</h2>
+        <button id="closeAddGroup" class="text-gray-500 hover:text-gray-700">&times;</button>
+      </div>
+      <input type="text" id="groupName" placeholder="输入组名" class="w-full p-3 border rounded mb-4">
+      <div class="flex justify-end space-x-3">
+        <button id="cancelGroup" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">取消</button>
+        <button id="saveGroup" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Link Modal -->
+  <div id="addLinkModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white p-4 rounded-lg w-96 max-w-md mx-4">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold">添加新链接</h2>
+        <button id="closeAddLink" class="text-gray-500 hover:text-gray-700">&times;</button>
+      </div>
+      <input type="text" id="linkName" placeholder="输入网址名" class="w-full p-3 border rounded mb-3">
+      <input type="text" id="linkUrl" placeholder="输入网址" class="w-full p-3 border rounded mb-4">
+      <div class="flex justify-end space-x-3">
+        <button id="cancelLink" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">取消</button>
+        <button id="saveLink" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Group Modal -->
+  <div id="editGroupModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white p-4 rounded-lg w-96 max-w-md mx-4">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold">修改组名</h2>
+        <button id="closeEditGroup" class="text-gray-500 hover:text-gray-700">&times;</button>
+      </div>
+      <input type="text" id="newGroupName" placeholder="新的组名" class="w-full p-3 border rounded mb-4">
+      <div class="flex justify-end space-x-3">
+        <button id="cancelEditGroup" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">取消</button>
+        <button id="saveEditGroup" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast 通知容器 -->
+  <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+  <script src="/src/main.js"></script>
+</body>
+</html>
