@@ -7,12 +7,9 @@ import { fileURLToPath } from 'url';
 import { config } from './config.js';
 import { db } from './database.js';
 import crypto from 'crypto';
-import favicon from 'serve-favicon';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
-
-app.use(favicon(path.join(__dirname, '../client/img', 'favicon.ico')));
 
 app.use(compression());
 app.use(cors({
