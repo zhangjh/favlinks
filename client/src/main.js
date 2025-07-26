@@ -358,6 +358,16 @@ class FavLinks {
       const groupEl = this.createGroupElement(groupName, links);
       this.container.appendChild(groupEl);
     });
+    
+    // 默认收起所有组
+    Object.keys(groups).forEach(groupName => {
+      const content = document.getElementById(`content-${groupName}`);
+      const toggle = document.getElementById(`toggle-${groupName}`);
+      if (content && toggle) {
+        content.style.display = 'none';
+        toggle.style.transform = 'rotate(-90deg)';
+      }
+    });
   }
 
   createGroupElement(groupName, links) {
