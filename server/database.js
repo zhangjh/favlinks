@@ -10,7 +10,7 @@ export const db = {
       .from('links')
       .select('*')
       .eq('username', username)
-      .order('id', { ascending: true });
+      .order('gmtmodified', { ascending: true });
     return { data, error };
   },
 
