@@ -10,7 +10,7 @@ export const db = {
       .from('links')
       .select('*')
       .eq('username', username)
-      .order('groupname', { ascending: true });
+      .order('id', { ascending: true });
     return { data, error };
   },
 
