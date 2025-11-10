@@ -20,8 +20,8 @@ cp .env.example .env
 ```
 
 编辑 `.env` 文件，填入您的实际配置：
-- `SUPABASE_URL`: 您的 Supabase 项目 URL
-- `SUPABASE_ANON_KEY`: 您的 Supabase 匿名密钥
+- `D1_API_BASE`: Cloudflare D1 数据库 API 地址
+- `D1_TOKEN`: D1 数据库访问令牌
 - `SESSION_SECRET`: 用于会话加密的密钥
 - `PORT`: 服务器端口（默认3000）
 
@@ -70,8 +70,8 @@ git push origin v2
 
 在Vercel项目设置中添加以下环境变量：
 
-- `SUPABASE_URL`: 您的Supabase项目URL
-- `SUPABASE_ANON_KEY`: 您的Supabase匿名密钥
+- `D1_API_BASE`: Cloudflare D1 数据库 API 地址
+- `D1_TOKEN`: D1 数据库访问令牌
 - `SESSION_SECRET`: 会话加密密钥
 - `NODE_ENV`: 设置为 `production`
 
@@ -84,6 +84,7 @@ git push origin v2
 ## 技术特性
 
 - **Node.js 22**: 使用最新的Node.js版本
+- **Cloudflare D1**: 使用 Cloudflare D1 边缘数据库
 - **加密兼容**: 自动升级旧版本密码加密
 - **一键部署**: 支持Vercel一键部署
 - **前后端一体**: 无需分离部署

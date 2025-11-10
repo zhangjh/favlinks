@@ -18,9 +18,9 @@ try {
 }
 
 export const config = {
-  supabase: {
-    url: process.env.SUPABASE_URL || 'YOUR_SUPABASE_URL',
-    anonKey: process.env.SUPABASE_ANON_KEY || 'YOUR_SUPABASE_ANON_KEY'
+  d1: {
+    apiBase: process.env.D1_API_BASE,
+    token: process.env.D1_TOKEN
   },
   server: {
     port: process.env.PORT || 3000
